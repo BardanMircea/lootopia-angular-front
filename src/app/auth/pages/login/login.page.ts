@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
@@ -9,20 +9,31 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
 })
 export class LoginPage {
-  email = '';
-  password = '';
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  loginForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required]],
+  });
+  loading = false;
   error = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  submit() {
+    if (this.loginForm.invalid) return;
+    this.loading = true;
+    this.error = '';
 
-  login() {
-    this.authService.login(this.email, this.password).subscribe({
+    this.authService.login(this.loginForm.value).subscribe({
       next: () => this.router.navigate(['/']),
-      error: (err) =>
-        (this.error = err.error?.message || 'Erreur de connexion'),
+      error: (err) => {
+        this.error = err.error?.message || 'Erreur de connexion';
+      },
+      complete: () => (this.loading = false),
     });
   }
 }

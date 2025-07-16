@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
@@ -9,24 +9,42 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
 })
 export class RegisterPage {
-  email = '';
-  password = '';
-  nickname = '';
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  form = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: [
+      '',
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/),
+    ],
+    nickname: ['', Validators.required],
+  });
+
+  loading = false;
   error = '';
-  success = '';
+  success = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  submit() {
+    if (this.form.invalid) return;
+    this.loading = true;
+    this.error = '';
 
-  register() {
-    this.authService
-      .register(this.email, this.password, this.nickname)
-      .subscribe({
-        next: () => (this.success = 'Un email d’activation a été envoyé.'),
-        error: (err) =>
-          (this.error = err.error?.message || 'Erreur lors de l’inscription'),
-      });
+    this.authService.register(this.form.value).subscribe({
+      next: () => {
+        this.success = true;
+        this.router.navigate(['/auth/activation']);
+      },
+      error: (err) => {
+        this.error = err?.error?.message || 'Erreur lors de l’inscription';
+        this.loading = false;
+      },
+    });
   }
 }

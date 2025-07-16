@@ -1,10 +1,10 @@
-<h2>Connexion</h2>
-<form (ngSubmit)="login()">
-  <label>Email : <input [(ngModel)]="email" name="email" required /></label>
-  <label
-    >Mot de passe :
-    <input type="password" [(ngModel)]="password" name="password" required
-  /></label>
-  <button type="submit">Se connecter</button>
+<form [formGroup]="loginForm" (ngSubmit)="submit()">
+  <input formControlName="email" type="email" placeholder="Email" />
+  <input
+    formControlName="password"
+    type="password"
+    placeholder="Mot de passe"
+  />
+  <button type="submit" [disabled]="loading">Se connecter</button>
+  <p *ngIf="error">{{ error }}</p>
 </form>
-<p *ngIf="error">{{ error }}</p>

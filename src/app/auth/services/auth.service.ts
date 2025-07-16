@@ -9,22 +9,26 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(email: string, password: string): Observable<any> {
+  login(
+    data: Partial<{ email: string | null; password: string | null }>
+  ): Observable<any> {
     return this.http
-      .post(`${this.apiUrl}/login`, { email, password })
+      .post(`${this.apiUrl}/login`, data)
       .pipe(tap((res: any) => localStorage.setItem('jwt', res.token)));
   }
 
-  register(email: string, password: string, nickname: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, {
-      email,
-      password,
-      nickname,
-    });
+  register(
+    data: Partial<{
+      email: string | null;
+      password: string | null;
+      nickname: string | null;
+    }>
+  ): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, data);
   }
 
-  activate(token: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/activate`, { token });
+  activate(token: string | null | undefined): Observable<any> {
+    return this.http.get(`${this.apiUrl}/activate?token=${token}`);
   }
 
   logout() {
