@@ -1,0 +1,47 @@
+{
+  "/auth": {
+    "target": "https://localhost:8443",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/chasses": {
+    "target": "https://localhost:8443",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/participations": {
+    "target": "https://localhost:8443",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/administration": {
+    "target": "https://localhost:8443",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/utilisateurs": {
+    "target": "https://localhost:8443",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/creusages": {
+    "target": "https://localhost:8443",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/etapes": {
+    "target": "https://localhost:8443",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/caches": {
+    "target": "https://localhost:8443",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/transactions": {
+    "target": "https://localhost:8443",
+    "secure": false,
+    "changeOrigin": true
+  }
+}
