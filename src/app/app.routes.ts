@@ -1,3 +1,16 @@
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
+import { authRoutes } from './auth/auth.routes';
 
-export const routes: Routes = [];
+export const appRoutes: Routes = [
+  ...authRoutes,
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full',
+  },
+  {
+    path: '**',
+    redirectTo: 'login',
+  },
+];
