@@ -21,8 +21,8 @@ export class AuthService {
   register(
     data: Partial<{
       email: string | null;
-      password: string | null;
-      nickname: string | null;
+      motDePasse: string | null;
+      pseudo: string | null;
     }>
   ): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, data);
@@ -42,5 +42,21 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !!this.getToken();
+  }
+
+  getUserInfo(): { email?: string; roles?: string[]; pseudo?: string } | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return {
+        email: payload.sub,
+        roles: payload.roles || [],
+        pseudo: payload.pseudo || '',
+      };
+    } catch (e) {
+      return null;
+    }
   }
 }

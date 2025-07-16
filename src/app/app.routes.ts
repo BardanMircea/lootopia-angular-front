@@ -1,16 +1,23 @@
-// src/app/app.routes.ts
 import { Routes } from '@angular/router';
-import { authRoutes } from './auth/auth.routes';
+import { LoginPage } from './auth/pages/login/login.page';
+import { RegisterPage } from './auth/pages/register/register.page';
+import { HomePage } from '../app/shared/components/home.page';
+import { ActivationPage } from './auth/pages/activation/activation.page';
+import { DashboardPage } from './shared/components/dashboard.page';
+import { authGuard } from './auth/guards/auth.guard';
+import { AppLayoutComponent } from './shared/components/app-layout.component';
 
 export const appRoutes: Routes = [
-  ...authRoutes,
   {
     path: '',
-    redirectTo: 'login',
-    pathMatch: 'full',
+    component: AppLayoutComponent,
+    children: [
+      { path: '', component: HomePage },
+      { path: 'login', component: LoginPage },
+      { path: 'register', component: RegisterPage },
+      { path: 'activate', component: ActivationPage },
+      { path: 'dashboard', component: DashboardPage, canActivate: [authGuard] },
+    ],
   },
-  {
-    path: '**',
-    redirectTo: 'login',
-  },
+  { path: '**', redirectTo: '' },
 ];

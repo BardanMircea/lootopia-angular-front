@@ -1,11 +1,71 @@
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <input formControlName="nickname" placeholder="Pseudo (facultatif)" />
-  <input formControlName="email" type="email" placeholder="Email" />
-  <input
-    formControlName="password"
-    type="password"
-    placeholder="Mot de passe"
-  />
-  <button type="submit" [disabled]="loading">Créer un compte</button>
-  <p *ngIf="error">{{ error }}</p>
-</form>
+<mat-card>
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <!-- Pseudo -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Pseudo</mat-label>
+      <input matInput formControlName="pseudo" />
+      <mat-error
+        *ngIf="form.get('pseudo')?.touched && form.get('pseudo')?.invalid"
+      >
+        Le pseudo est requis
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" />
+      <mat-error
+        *ngIf="form.get('email')?.touched && form.get('email')?.invalid"
+      >
+        Adresse email invalide
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Mot de passe -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Mot de passe</mat-label>
+      <input matInput formControlName="motDePasse" type="password" />
+      <mat-error
+        *ngIf="form.get('motDePasse')?.touched && form.get('motDePasse')?.invalid"
+      >
+        Mot de passe non valide
+      </mat-error>
+    </mat-form-field>
+
+    <ul>
+      <li [class.valid]="!mdpErrors.length">✔ 8 caractères minimum</li>
+      <li [class.valid]="!mdpErrors.upper">✔ Une majuscule</li>
+      <li [class.valid]="!mdpErrors.lower">✔ Une minuscule</li>
+      <li [class.valid]="!mdpErrors.digit">✔ Un chiffre</li>
+      <li [class.valid]="!mdpErrors.special">✔ Un caractère spécial</li>
+    </ul>
+
+    <!-- RGPD -->
+    <mat-checkbox formControlName="rgpdConsent">
+      J'accepte les conditions RGPD
+    </mat-checkbox>
+    <mat-error
+      *ngIf="form.get('rgpdConsent')?.touched && form.get('rgpdConsent')?.invalid"
+    >
+      Vous devez accepter les conditions RGPD
+    </mat-error>
+
+    <!-- Bouton -->
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="loading || form.invalid"
+    >
+      Créer un compte
+    </button>
+
+    <!-- Erreur globale -->
+    <p *ngIf="error" style="color: red">{{ error }}</p>
+  </form>
+</mat-card>
+<mat-card *ngIf="success">
+  ✅ Votre compte a bien été enregistré. Un email d’activation vous a été
+  envoyé. Veuillez vérifier votre boîte mail.
+</mat-card>

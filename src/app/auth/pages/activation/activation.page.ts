@@ -1,44 +1,50 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit, inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-activation',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, MatCardModule],
   template: `
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      <input formControlName="token" placeholder="Token d'activation" />
-      <button type="submit">Activer</button>
-      <p *ngIf="error">{{ error }}</p>
-      <p *ngIf="success">Activation réussie !</p>
-    </form>
+    <mat-card>
+      <p *ngIf="loading">Activation en cours...</p>
+      <p *ngIf="success" style="color: green">
+        ✅ Activation réussie. Redirection en cours...
+      </p>
+      <p *ngIf="error" style="color: red">❌ {{ error }}</p>
+    </mat-card>
   `,
 })
-export class ActivationPage {
-  private fb = inject(FormBuilder);
+export class ActivationPage implements OnInit {
+  private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  form = this.fb.group({
-    token: ['', Validators.required],
-  });
-
-  error = '';
+  loading = true;
   success = false;
+  error = '';
 
-  submit() {
-    if (this.form.invalid) return;
+  ngOnInit(): void {
+    const token = this.route.snapshot.queryParamMap.get('token');
+    if (!token) {
+      this.error = 'Token manquant';
+      this.loading = false;
+      return;
+    }
 
-    this.authService.activate(this.form.value.token).subscribe({
+    this.authService.activate(token).subscribe({
       next: () => {
         this.success = true;
-        this.router.navigate(['/auth/login']);
+        this.loading = false;
+        setTimeout(() => this.router.navigate(['/login']), 2000);
       },
       error: (err) => {
-        this.error = err?.error?.message || 'Activation échouée';
+        this.error = err?.error?.message || 'Erreur lors de l’activation';
+        this.loading = false;
       },
     });
   }
