@@ -18,7 +18,7 @@ export class LoginPage {
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]],
+    motDePasse: ['', [Validators.required]],
   });
   loading = false;
   error = '';

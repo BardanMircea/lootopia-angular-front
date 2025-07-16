@@ -5,13 +5,14 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = '/api/auth';
+  private apiUrl = 'http://localhost:8080/auth';
 
   constructor(private http: HttpClient) {}
 
   login(
-    data: Partial<{ email: string | null; password: string | null }>
+    data: Partial<{ email: string | null; motDePasse: string | null }>
   ): Observable<any> {
+    console.log('Login data:', data);
     return this.http
       .post(`${this.apiUrl}/login`, data)
       .pipe(tap((res: any) => localStorage.setItem('jwt', res.token)));
