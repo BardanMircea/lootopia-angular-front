@@ -30,7 +30,10 @@ export class LoginPage {
     this.error = '';
 
     this.authService.login(this.loginForm.value).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
+      next: (res) => {
+        this.router.navigate(['/dashboard']);
+        console.log('Token stocké :', res.token);
+      },
       error: (err) => {
         this.error = err.error?.message || 'Erreur de connexion';
       },

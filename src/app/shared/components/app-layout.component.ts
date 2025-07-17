@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -34,7 +34,7 @@ import { AuthService } from '../../auth/services/auth.service';
 
           <ng-container *ngIf="isLoggedIn()">
             <a mat-list-item routerLink="/dashboard">📊 Tableau de bord</a>
-            <a mat-list-item routerLink="/chasses/public"
+            <a mat-list-item routerLink="/chasses-publiques"
               >🗺️ Chasses publiques</a
             >
             <a mat-list-item routerLink="/participations/moi"

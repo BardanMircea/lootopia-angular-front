@@ -6,6 +6,7 @@ import { ActivationPage } from './auth/pages/activation/activation.page';
 import { DashboardPage } from './shared/components/dashboard.page';
 import { authGuard } from './auth/guards/auth.guard';
 import { AppLayoutComponent } from './shared/components/app-layout.component';
+import { ChassesPubliquesPage } from './shared/components/chasses-publiques.page';
 
 export const appRoutes: Routes = [
   {
@@ -17,6 +18,11 @@ export const appRoutes: Routes = [
       { path: 'register', component: RegisterPage },
       { path: 'activate', component: ActivationPage },
       { path: 'dashboard', component: DashboardPage, canActivate: [authGuard] },
+      {
+        path: 'chasses-publiques',
+        component: ChassesPubliquesPage,
+        canActivate: [authGuard],
+      },
     ],
   },
   { path: '**', redirectTo: '' },
