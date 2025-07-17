@@ -24,8 +24,21 @@ export class ChasseService {
     console.log('✅ ChasseService initialized');
   }
 
-  getChassesPubliques(): Observable<Chasse[]> {
-    return this.http.get<Chasse[]>(`${this.apiUrl}/public`);
+  getChassesPubliques(
+    page: number = 0,
+    size: number = 5
+  ): Observable<{
+    content: Chasse[];
+    totalElements: number;
+    totalPages: number;
+    number: number;
+  }> {
+    return this.http.get<{
+      content: Chasse[];
+      totalElements: number;
+      totalPages: number;
+      number: number;
+    }>(`${this.apiUrl}/public?page=${page}&size=${size}`);
   }
 
   getChasseById(id: number): Observable<Chasse> {
