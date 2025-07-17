@@ -14,6 +14,7 @@ export interface Chasse {
   nombreParticipants: number;
   nombreEtapes: number;
   montantRecompense: number;
+  dejaInscrit?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -22,6 +23,12 @@ export class ChasseService {
 
   constructor(private http: HttpClient) {
     console.log('✅ ChasseService initialized');
+  }
+
+  participer(chasseId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/participations`, {
+      chasseId: chasseId,
+    });
   }
 
   getChassesPubliques(

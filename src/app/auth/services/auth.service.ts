@@ -43,7 +43,7 @@ export class AuthService {
     return !!this.getToken();
   }
 
-  getUserInfo(): { email?: string; roles?: string[]; pseudo?: string } | null {
+  getUserInfo(): { email?: string; roles?: string[]; pseudo: string } | null {
     const token = this.getToken();
     if (!token) return null;
 
