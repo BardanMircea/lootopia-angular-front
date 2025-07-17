@@ -5,10 +5,26 @@ import { provideRouter } from '@angular/router';
 import { appRoutes } from './app/app.routes';
 import { JwtInterceptor } from './app/auth/interceptors/jwt.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { environment } from '../src/environements/environment';
+
+const script = document.createElement('script');
+script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}`;
+script.async = true;
+script.defer = true;
+
+script.onload = () => {
+  console.log('Google Maps API script loaded');
+};
+
+script.onerror = () => {
+  console.error('Échec de chargement de Google Maps API');
+};
+document.head.appendChild(script);
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(appRoutes),
-    provideHttpClient(withInterceptors([JwtInterceptor])), provideAnimationsAsync(),
+    provideHttpClient(withInterceptors([JwtInterceptor])),
+    provideAnimationsAsync(),
   ],
 });
