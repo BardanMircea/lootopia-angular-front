@@ -15,6 +15,7 @@ export interface Chasse {
   nombreEtapes: number;
   montantRecompense: number;
   dejaInscrit?: boolean;
+  fraisParticipation: number;
 }
 
 @Injectable({ providedIn: 'root' })

@@ -7,6 +7,8 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ParticipationService } from '../services/participation.service';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../auth/services/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ChasseDetailsDialogComponent } from './chasse-details-dialog.component';
 
 @Component({
   standalone: true,
@@ -48,6 +50,9 @@ import { AuthService } from '../../auth/services/auth.service';
                 : 'Participer'
             }}
           </button>
+          <button mat-button color="accent" (click)="openDetails(chasse)">
+            Détails
+          </button>
         </mat-card-actions>
       </mat-card>
       <mat-paginator
@@ -83,6 +88,7 @@ export class ChassesPubliquesPage implements OnInit {
   private chasseService = inject(ChasseService);
   private participationService = inject(ParticipationService);
   private authService = inject(AuthService);
+  private dialog = inject(MatDialog);
 
   currentUserPseudo: string | undefined;
   chasses: Chasse[] = [];
@@ -165,5 +171,18 @@ export class ChassesPubliquesPage implements OnInit {
         this.participationChasseIds.has(chasse.id) ||
         chasse.createur === this.currentUserPseudo,
     }));
+  }
+
+  openDetails(chasse: Chasse) {
+    this.dialog.open(ChasseDetailsDialogComponent, {
+      data: {
+        titre: chasse.titre,
+        description: chasse.description,
+        fraisParticipation: chasse.fraisParticipation,
+        nombreParticipants: chasse.nombreParticipants,
+        montantRecompense: chasse.montantRecompense,
+        typeRecompense: 'Couronnes',
+      },
+    });
   }
 }
