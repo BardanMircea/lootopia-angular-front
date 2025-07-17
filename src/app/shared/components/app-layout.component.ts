@@ -37,7 +37,7 @@ import { AuthService } from '../../auth/services/auth.service';
             <a mat-list-item routerLink="/chasses-publiques"
               >🗺️ Chasses publiques</a
             >
-            <a mat-list-item routerLink="/participations/moi"
+            <a mat-list-item routerLink="/mes-participations"
               >🎯 Mes participations</a
             >
 

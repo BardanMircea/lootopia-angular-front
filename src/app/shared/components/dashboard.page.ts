@@ -8,7 +8,6 @@ import { MatCardModule } from '@angular/material/card';
   template: `
     <mat-card>
       <h2>Tableau de bord utilisateur</h2>
-      <p>Cette page est protégée par un guard.</p>
     </mat-card>
   `,
 })

@@ -25,6 +25,10 @@ export class ParticipationService {
   }
 
   getMesParticipations(): Observable<Participation[]> {
-    return this.http.get<Participation[]>('/participations');
+    return this.http.get<Participation[]>('/participations/moi');
+  }
+
+  annulerParticipation(participationId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${participationId}/annuler`, {});
   }
 }
