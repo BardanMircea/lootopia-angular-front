@@ -33,6 +33,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('jwt');
+    localStorage.removeItem('failedCreusages');
   }
 
   getToken(): string | null {

@@ -42,13 +42,7 @@ import { ChasseDetailsDialogComponent } from './chasse-details-dialog.component'
             (click)="participer(chasse)"
             [disabled]="chasse.dejaInscrit"
           >
-            {{
-              chasse.dejaInscrit
-                ? chasse.createur === currentUserPseudo
-                  ? 'Organisateur'
-                  : 'Déja inscrit'
-                : 'Participer'
-            }}
+            {{ chasse.labelParticipation }}
           </button>
           <button mat-button color="accent" (click)="openDetails(chasse)">
             Détails
@@ -91,10 +85,11 @@ export class ChassesPubliquesPage implements OnInit {
   private dialog = inject(MatDialog);
 
   currentUserPseudo: string | undefined;
-  chasses: Chasse[] = [];
+  chasses: any[] = [];
   participationChasseIds = new Set<number>();
   loading = true;
   participationsLoaded = false;
+  chassesGagneesIds = new Set<number>();
 
   // Pagination
   pageSize = 5;
@@ -108,6 +103,9 @@ export class ChassesPubliquesPage implements OnInit {
         //  les IDs des chasses déja rejointes
         this.participationChasseIds = new Set(
           participations.map((p) => p.chasseId)
+        );
+        this.chassesGagneesIds = new Set(
+          participations.filter((p) => p.cacheTrouvee).map((p) => p.chasseId)
         );
         this.participationsLoaded = true;
         console.log('Participations chargées :', this.participationChasseIds);
@@ -165,12 +163,27 @@ export class ChassesPubliquesPage implements OnInit {
   }
 
   private mapChasses() {
-    this.chasses = this.chasses.map((chasse) => ({
-      ...chasse,
-      dejaInscrit:
-        this.participationChasseIds.has(chasse.id) ||
-        chasse.createur === this.currentUserPseudo,
-    }));
+    this.chasses = this.chasses.map((chasse) => {
+      const estCreateur = chasse.createur === this.currentUserPseudo;
+      const dejaInscrit = this.participationChasseIds.has(chasse.id);
+      const gagnee = this.chassesGagneesIds.has(chasse.id);
+
+      const dejaInscritFinal = estCreateur || dejaInscrit || gagnee;
+
+      const label = estCreateur
+        ? 'Organisateur'
+        : gagnee
+        ? 'Cache trouvée ✅'
+        : dejaInscrit
+        ? 'Déjà inscrit'
+        : 'Participer';
+
+      return {
+        ...chasse,
+        dejaInscrit: dejaInscritFinal,
+        labelParticipation: label,
+      };
+    });
   }
 
   openDetails(chasse: Chasse) {

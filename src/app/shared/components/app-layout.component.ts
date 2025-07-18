@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterOutlet, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -7,6 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../auth/services/auth.service';
+import { UtilisateurService } from '../services/utilisateur.service';
 
 @Component({
   standalone: true,
@@ -61,8 +62,11 @@ import { AuthService } from '../../auth/services/auth.service';
       <mat-sidenav-content>
         <mat-toolbar color="primary">
           <span style="margin-left:auto;" *ngIf="isLoggedIn()">
-            Bienvenue, <strong>{{ pseudo() }} !</strong>
+            Logged in as <strong>{{ pseudo() }}</strong>
           </span>
+          <span style="margin-left:auto;" *ngIf="isLoggedIn()"
+            >Solde💰: {{ this.soldeCouronnes() }} couronnes</span
+          >
         </mat-toolbar>
         <main style="padding: 1rem;">
           <router-outlet />
@@ -91,7 +95,17 @@ import { AuthService } from '../../auth/services/auth.service';
 export class AppLayoutComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
-  pseudo = () => this.auth.getUserInfo()?.pseudo || 'Utilisateur';
+  private utilisateurService = inject(UtilisateurService);
+  soldeCouronnes = computed(() => this.utilisateurService.soldeCouronnes());
+  private userEmail = this.auth.getUserInfo()?.email || '';
+  pseudo = () => this.auth.getUserInfo()?.pseudo;
+
+  ngOnInit() {
+    const email = this.auth.getUserInfo()?.email;
+    if (email) {
+      this.utilisateurService.mettreAJourSolde(email);
+    }
+  }
 
   isLoggedIn() {
     return this.auth.isLoggedIn();

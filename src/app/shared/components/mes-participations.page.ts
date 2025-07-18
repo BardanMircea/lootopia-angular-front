@@ -10,6 +10,9 @@ import {
   Participation,
 } from '../services/participation.service';
 import { CreusageService } from '../services/creusage.service';
+import { UtilisateurService } from '../services/utilisateur.service';
+import { AuthService } from '../../auth/services/auth.service';
+import { TransactionService } from '../services/transaction.service';
 
 @Component({
   standalone: true,
@@ -44,39 +47,56 @@ import { CreusageService } from '../services/creusage.service';
               pseudo
             }}</mat-list-item>
           </mat-list>
-
           <div *ngIf="successMessages[p.id]" style="margin-top: 10px;">
             🎉 {{ successMessages[p.id] }} Cache trouvé! Récompense ajoutée :
             {{ recompense }} 🪙
           </div>
-          <div *ngIf="failedCreusages[p.id] && !canRetry(p.id)">
-            ❌ Creusage raté. Réessayer dans
-            {{ retryCountdowns[p.id] || '...' }}.
+          <div *ngIf="!p.cacheTrouvee">
+            <div *ngIf="failedCreusages[p.id] && !canRetry(p.id)">
+              ❌ Creusage raté. Réessayer dans
+              {{ retryCountdowns[p.id] || '...' }}.
+            </div>
           </div>
         </mat-card-content>
 
         <mat-card-actions
           *ngIf="!successMessages[p.id] || failedCreusages[p.id]"
         >
-          <button
-            mat-stroked-button
-            color="warn"
-            (click)="annulerParticipation(p)"
-          >
-            Annuler la participation
-          </button>
-          <button
-            mat-raised-button
-            color="accent"
-            [disabled]="!p.eligibleCreusage || failedCreusages[p.id]"
-            (click)="initierCreusage(p)"
-          >
-            {{
-              failedCreusages[p.id]
-                ? 'Attendre (' + (retryCountdowns[p.id] || '...') + ')'
-                : 'Creuser'
-            }}
-          </button>
+          <ng-container *ngIf="p.cacheTrouvee; else creuserBtn">
+            <p class="success-text">✅ Cache déjà trouvée</p>
+          </ng-container>
+          <ng-template #creuserBtn>
+            <button
+              mat-stroked-button
+              color="warn"
+              (click)="annulerParticipation(p)"
+            >
+              Annuler la participation
+            </button>
+            <button
+              mat-raised-button
+              color="accent"
+              [disabled]="
+                !p.eligibleCreusage || failedCreusages[p.id] || p.cacheTrouvee
+              "
+              (click)="initierCreusage(p)"
+            >
+              {{
+                failedCreusages[p.id]
+                  ? 'Attendre (' + (retryCountdowns[p.id] || '...') + ')'
+                  : 'Creuser'
+              }}
+            </button>
+            <button
+              *ngIf="failedCreusages[p.id] && !creusageDebloque[p.id]"
+              mat-stroked-button
+              color="primary"
+              (click)="debloquerCreusage(p)"
+              [disabled]="soldeUtilisateur < coutDeblocage"
+            >
+              🔓 Débloquer maintenant ({{ coutDeblocage }} 💰)
+            </button>
+          </ng-template>
         </mat-card-actions>
       </mat-card>
 
@@ -131,9 +151,28 @@ import { CreusageService } from '../services/creusage.service';
 export class MesParticipationsPage implements OnInit {
   private participationService = inject(ParticipationService);
   private creusageService = inject(CreusageService);
+  private utilisateurService = inject(UtilisateurService);
+  private authService = inject(AuthService);
+  private transactionService = inject(TransactionService);
+  creusageDebloque: Record<number, boolean> = {};
+  selectedMarker: google.maps.Marker | null = null;
+  customCrossIcon = {
+    url:
+      'data:image/svg+xml;charset=UTF-8,' +
+      encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+        <line x1="4" y1="4" x2="28" y2="28" stroke="red" stroke-width="4"/>
+        <line x1="28" y1="4" x2="4" y2="28" stroke="red" stroke-width="4"/>
+      </svg>
+    `),
+    scaledSize: new google.maps.Size(32, 32),
+    anchor: new google.maps.Point(16, 16),
+  };
 
   participations: Participation[] = [];
   loading = true;
+  soldeUtilisateur = this.utilisateurService.soldeCouronnes();
+  readonly coutDeblocage = 20;
 
   modeCreusage = false;
   currentParticipation: Participation | null = null;
@@ -147,6 +186,11 @@ export class MesParticipationsPage implements OnInit {
   retryCountdowns: Record<number, string> = {};
 
   ngOnInit(): void {
+    this.utilisateurService
+      .getUtilisateurConnecte(this.authService.getUserInfo()?.email || '')
+      .subscribe({
+        next: (u) => (this.soldeUtilisateur = u.soldeCouronnes),
+      });
     this.participationService.getMesParticipations().subscribe({
       next: (data) => {
         this.participations = data;
@@ -161,6 +205,38 @@ export class MesParticipationsPage implements OnInit {
 
     // Mise à jour automatique des compte à rebours
     setInterval(() => this.updateCountdowns(), 1000);
+  }
+
+  debloquerCreusage(p: Participation) {
+    if (this.soldeUtilisateur < this.coutDeblocage) {
+      alert("❌ Vous n'avez pas assez de couronnes !");
+      return;
+    }
+
+    if (
+      !confirm(
+        `Payer ${this.coutDeblocage} couronnes pour réessayer immédiatement ?`
+      )
+    )
+      return;
+
+    this.transactionService.debloquerCreusage(this.coutDeblocage).subscribe({
+      next: (res) => {
+        this.utilisateurService.setSoldeDirectement(res.nouveauSolde);
+        delete this.failedCreusages[p.id];
+        delete this.retryCountdowns[p.id];
+        this.creusageDebloque[p.id] = true;
+        alert(
+          '✅ Déblocage effectué ! Vous pouvez maintenant creuser à nouveau.'
+        );
+      },
+      error: () => {
+        alert('❌ Erreur lors du déblocage. Veuillez réessayer.');
+      },
+    });
+
+    delete this.failedCreusages[p.id];
+    delete this.retryCountdowns[p.id];
   }
 
   annulerParticipation(participation: Participation) {
@@ -200,9 +276,15 @@ export class MesParticipationsPage implements OnInit {
         if (e.latLng) {
           this.lat = e.latLng.lat();
           this.lng = e.latLng.lng();
-          new google.maps.Marker({
+
+          // Supprimer l'ancien marker
+          if (this.selectedMarker) {
+            this.selectedMarker.setMap(null);
+          }
+          this.selectedMarker = new google.maps.Marker({
             position: { lat: this.lat, lng: this.lng },
             map,
+            icon: this.customCrossIcon,
           });
         }
       });
@@ -238,6 +320,9 @@ export class MesParticipationsPage implements OnInit {
           this.successMessages[this.currentParticipation!.id] =
             res?.message || 'Cache trouvé ! Récompense ajoutée.';
           this.modeCreusage = false;
+          this.utilisateurService.mettreAJourSolde(
+            this.authService.getUserInfo()?.email || ''
+          );
         },
         error: () => {
           // Cas d’erreur réelle (timeout, 500, etc.)

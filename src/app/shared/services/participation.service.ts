@@ -10,6 +10,7 @@ export interface Participation {
   inscritDepuis: Date;
   etapeCourante: number;
   eligibleCreusage: boolean;
+  cacheTrouvee: boolean;
 }
 
 @Injectable({ providedIn: 'root' })

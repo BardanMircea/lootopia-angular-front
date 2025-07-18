@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { materialImports } from '../../../material';
+import { UtilisateurService } from '../../../shared/services/utilisateur.service';
 
 @Component({
   standalone: true,
@@ -15,6 +16,7 @@ import { materialImports } from '../../../material';
 export class LoginPage {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private utilisateurService = inject(UtilisateurService);
   private router = inject(Router);
 
   loginForm = this.fb.group({
@@ -33,6 +35,9 @@ export class LoginPage {
       next: (res) => {
         this.router.navigate(['/dashboard']);
         console.log('Token stocké :', res.token);
+        this.utilisateurService.mettreAJourSolde(
+          this.authService.getUserInfo()?.email || ''
+        );
       },
       error: (err) => {
         this.error = err.error?.message || 'Erreur de connexion';
