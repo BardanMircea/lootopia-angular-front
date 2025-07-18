@@ -6,7 +6,6 @@ export interface Creusage {
   chasseId: number;
   latitude: number;
   longitude: number;
-  coutEnCouronnes: number;
 }
 
 @Injectable({ providedIn: 'root' })

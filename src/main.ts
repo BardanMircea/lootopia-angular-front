@@ -5,7 +5,7 @@ import { provideRouter } from '@angular/router';
 import { appRoutes } from './app/app.routes';
 import { JwtInterceptor } from './app/auth/interceptors/jwt.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { environment } from '../src/environements/environment';
+import { environment } from './environments/environment';
 
 const script = document.createElement('script');
 script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}`;

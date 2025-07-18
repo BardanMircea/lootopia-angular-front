@@ -22,9 +22,7 @@ export interface Chasse {
 export class ChasseService {
   private apiUrl = '/chasses';
 
-  constructor(private http: HttpClient) {
-    console.log('✅ ChasseService initialized');
-  }
+  constructor(private http: HttpClient) {}
 
   participer(chasseId: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/participations`, {

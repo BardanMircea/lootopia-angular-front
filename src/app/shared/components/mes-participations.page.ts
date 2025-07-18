@@ -1,4 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -8,12 +14,13 @@ import {
   ParticipationService,
   Participation,
 } from '../services/participation.service';
+import { CreusageService } from '../services/creusage.service';
 
 @Component({
   standalone: true,
   selector: 'app-mes-participations',
   template: `
-    <ng-container *ngIf="loading; else content">
+    <ng-container *ngIf="loading(); else content">
       <div class="center-spinner">
         <mat-spinner></mat-spinner>
       </div>
@@ -21,11 +28,11 @@ import {
 
     <ng-template #content>
       <h2>Mes participations</h2>
-      <div *ngIf="participations.length === 0">
+      <div *ngIf="participations().length === 0">
         Vous n'avez rejoint aucune chasse pour le moment.
       </div>
 
-      <mat-card *ngFor="let p of participations" class="participation-card">
+      <mat-card *ngFor="let p of participations()" class="participation-card">
         <mat-card-title>{{ p.titreChasse }}</mat-card-title>
         <mat-card-content>
           <p>
@@ -40,11 +47,7 @@ import {
             }}</mat-list-item>
           </mat-list>
         </mat-card-content>
-        <mat-card-actions>
-          <button mat-stroked-button color="primary" disabled>
-            Voir progression (à venir)
-          </button>
-        </mat-card-actions>
+
         <mat-card-actions>
           <button
             mat-stroked-button
@@ -53,8 +56,29 @@ import {
           >
             Annuler la participation
           </button>
+          <button
+            mat-raised-button
+            color="accent"
+            [disabled]="!p.eligibleCreusage"
+            (click)="initierCreusage(p)"
+          >
+            {{ p.eligibleCreusage ? 'Creuser' : 'Creusage indisponible' }}
+          </button>
         </mat-card-actions>
       </mat-card>
+
+      <div *ngIf="modeCreusage()">
+        <h3>🔍 Choisis un emplacement sur la carte</h3>
+        <div id="map" style="height: 400px; margin-top: 10px;"></div>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="validerCreusage()"
+          style="margin-top: 10px"
+        >
+          Valider le creusage
+        </button>
+      </div>
     </ng-template>
   `,
   styles: [
@@ -79,24 +103,26 @@ import {
 })
 export class MesParticipationsPage implements OnInit {
   private participationService = inject(ParticipationService);
-  participations: Participation[] = [];
-  loading = true;
+  private creusageService = inject(CreusageService);
+
+  participations: WritableSignal<Participation[]> = signal([]);
+  loading = signal(true);
+  modeCreusage = signal(false);
+  private currentChasseId: number | null = null;
+  private selectedCoords: { lat: number; lng: number } | null = null;
 
   ngOnInit(): void {
     this.participationService.getMesParticipations().subscribe({
       next: (data) => {
-        this.participations = data;
-        this.loading = false;
+        this.participations.set(data);
+        this.loading.set(false);
       },
       error: (err) => {
         console.error('Erreur chargement participations :', err);
-        this.loading = false;
+        this.participations.set([]);
+        this.loading.set(false);
       },
     });
-  }
-
-  OnLoadPage() {
-    this.ngOnInit();
   }
 
   annulerParticipation(participation: Participation) {
@@ -105,14 +131,68 @@ export class MesParticipationsPage implements OnInit {
 
     this.participationService.annulerParticipation(participation.id).subscribe({
       next: () => {
-        this.participations = this.participations.filter(
-          (p) => p.id !== participation.id
+        this.participations.set(
+          this.participations().filter((p) => p.id !== participation.id)
         );
         alert('Participation annulée.');
       },
       error: (err) => {
         console.error('Erreur lors de l’annulation :', err);
         alert(err?.error?.message || 'Erreur lors de l’annulation.');
+      },
+    });
+  }
+
+  initierCreusage(participation: Participation) {
+    this.currentChasseId = participation.chasseId;
+    this.modeCreusage.set(true);
+
+    setTimeout(() => {
+      const mapEl = document.getElementById('map');
+      if (!mapEl) return;
+
+      const map = new google.maps.Map(mapEl, {
+        center: { lat: 48.8566, lng: 2.3522 },
+        zoom: 12,
+      });
+
+      map.addListener('click', (event: google.maps.MapMouseEvent) => {
+        if (event.latLng) {
+          this.selectedCoords = {
+            lat: event.latLng.lat(),
+            lng: event.latLng.lng(),
+          };
+          new google.maps.Marker({
+            position: this.selectedCoords,
+            map,
+          });
+        }
+      });
+    }, 0);
+  }
+
+  validerCreusage() {
+    if (!this.currentChasseId || !this.selectedCoords) {
+      alert('Veuillez sélectionner un point sur la carte.');
+      return;
+    }
+
+    const creusage = {
+      chasseId: this.currentChasseId,
+      latitude: this.selectedCoords.lat,
+      longitude: this.selectedCoords.lng,
+    };
+
+    this.creusageService.creuser(creusage).subscribe({
+      next: () => {
+        alert('✅ Creusage effectué avec succès !');
+        this.modeCreusage.set(false);
+        this.currentChasseId = null;
+        this.selectedCoords = null;
+      },
+      error: (err) => {
+        console.error(err);
+        alert(err?.error?.message || '❌ Erreur lors du creusage.');
       },
     });
   }
