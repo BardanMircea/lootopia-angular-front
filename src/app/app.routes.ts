@@ -1,33 +1,69 @@
 import { Routes } from '@angular/router';
-import { LoginPage } from './auth/pages/login/login.page';
-import { RegisterPage } from './auth/pages/register/register.page';
-import { HomePage } from '../app/shared/components/home.page';
-import { ActivationPage } from './auth/pages/activation/activation.page';
-import { DashboardPage } from './shared/components/dashboard.page';
-import { authGuard } from './auth/guards/auth.guard';
 import { AppLayoutComponent } from './shared/components/app-layout.component';
-import { ChassesPubliquesPage } from './shared/components/chasses-publiques.page';
-import { MesParticipationsPage } from './shared/components/mes-participations.page';
+import { authGuard } from './auth/guards/auth.guard';
 
 export const appRoutes: Routes = [
   {
     path: '',
     component: AppLayoutComponent,
     children: [
-      { path: '', component: HomePage },
-      { path: 'login', component: LoginPage },
-      { path: 'register', component: RegisterPage },
-      { path: 'activate', component: ActivationPage },
-      { path: 'dashboard', component: DashboardPage, canActivate: [authGuard] },
+      { path: '', redirectTo: 'home-page', pathMatch: 'full' },
+      {
+        path: 'home-page',
+        loadComponent: () =>
+          import('./shared/components/home.page').then((m) => m.HomePage),
+      },
+
       {
         path: 'chasses-publiques',
-        component: ChassesPubliquesPage,
+        loadComponent: () =>
+          import('./shared/components/chasses-publiques.page').then(
+            (m) => m.ChassesPubliquesPage
+          ),
         canActivate: [authGuard],
       },
       {
         path: 'mes-participations',
-        component: MesParticipationsPage,
+        loadComponent: () =>
+          import('./shared/components/mes-participations.page').then(
+            (m) => m.MesParticipationsPage
+          ),
         canActivate: [authGuard],
+      },
+      {
+        path: 'chasses/nouvelle',
+        loadComponent: () =>
+          import('./shared/components/creer-chasse.page').then(
+            (m) => m.CreerChassePage
+          ),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'chasses/mes',
+        loadComponent: () =>
+          import('./shared/components/mes-chasses.page').then(
+            (m) => m.MesChassesPage
+          ),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./auth/pages/login/login.page').then((m) => m.LoginPage),
+      },
+      {
+        path: 'register',
+        loadComponent: () =>
+          import('./auth/pages/register/register.page').then(
+            (m) => m.RegisterPage
+          ),
+      },
+      {
+        path: 'activate',
+        loadComponent: () =>
+          import('./auth/pages/activation/activation.page').then(
+            (m) => m.ActivationPage
+          ),
       },
     ],
   },

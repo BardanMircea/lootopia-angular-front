@@ -18,16 +18,35 @@ export interface Chasse {
   fraisParticipation: number;
 }
 
+export interface NouvelleChasse {
+  titre: string;
+  description?: string;
+  latitudeCache: number;
+  longitudeCache: number;
+  dateDebut: string;
+  dateFin: string;
+  monde: string;
+  visibilite: string;
+  nombreParticipants: number;
+  nombreEtapes: number;
+  typeRecompense: string;
+  montantRecompense: number;
+  fraisParticipation: number;
+  messageCacheTrouve: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ChasseService {
   private apiUrl = '/chasses';
 
   constructor(private http: HttpClient) {}
 
-  participer(chasseId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/participations`, {
-      chasseId: chasseId,
-    });
+  getChassesOrganisateur(): Observable<NouvelleChasse[]> {
+    return this.http.get<NouvelleChasse[]>(`${this.apiUrl}/mes-chasses`, {});
+  }
+
+  creerChasse(chasse: NouvelleChasse): Observable<Chasse> {
+    return this.http.post<Chasse>(`${this.apiUrl}`, chasse);
   }
 
   getChassesPubliques(

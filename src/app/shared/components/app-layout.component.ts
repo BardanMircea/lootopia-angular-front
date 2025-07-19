@@ -34,7 +34,7 @@ import { UtilisateurService } from '../services/utilisateur.service';
           </ng-container>
 
           <ng-container *ngIf="isLoggedIn()">
-            <a mat-list-item routerLink="/dashboard">📊 Tableau de bord</a>
+            <h4 style="margin-left: 8px; margin-top: 16px;">🎮 Joueur</h4>
             <a mat-list-item routerLink="/chasses-publiques"
               >🗺️ Chasses publiques</a
             >
@@ -42,18 +42,13 @@ import { UtilisateurService } from '../services/utilisateur.service';
               >🎯 Mes participations</a
             >
 
-            <ng-container *ngIf="isAdmin()">
-              <a mat-list-item routerLink="/chasses/mes"
-                >📚 Mes chasses organisées</a
-              >
-              <a mat-list-item routerLink="/chasses/nouvelle"
-                >➕ Créer une chasse</a
-              >
-              <a mat-list-item routerLink="/etapes/ajouter"
-                >🧩 Ajouter des étapes</a
-              >
-            </ng-container>
+            <h4 style="margin-left: 8px; margin-top: 16px;">🛠️ Organisateur</h4>
+            <a mat-list-item routerLink="/chasses/nouvelle"
+              >➕ Créer une chasse</a
+            >
+            <a mat-list-item routerLink="/chasses/mes">📚 Mes chasses</a>
 
+            <!-- 🔓 DECONNEXION -->
             <a mat-list-item (click)="logout()">🚪 Déconnexion</a>
           </ng-container>
         </mat-nav-list>
@@ -62,11 +57,10 @@ import { UtilisateurService } from '../services/utilisateur.service';
       <mat-sidenav-content>
         <mat-toolbar color="primary">
           <span style="margin-left:auto;" *ngIf="isLoggedIn()">
-            Logged in as <strong>{{ pseudo() }}</strong>
+            Connecté en tant que <strong>{{ pseudo() }}</strong
+            ><br />
+            Solde 💰: {{ this.soldeCouronnes() }} couronnes
           </span>
-          <span style="margin-left:auto;" *ngIf="isLoggedIn()"
-            >Solde💰: {{ this.soldeCouronnes() }} couronnes</span
-          >
         </mat-toolbar>
         <main style="padding: 1rem;">
           <router-outlet />
@@ -97,7 +91,6 @@ export class AppLayoutComponent {
   private router = inject(Router);
   private utilisateurService = inject(UtilisateurService);
   soldeCouronnes = computed(() => this.utilisateurService.soldeCouronnes());
-  private userEmail = this.auth.getUserInfo()?.email || '';
   pseudo = () => this.auth.getUserInfo()?.pseudo;
 
   ngOnInit() {
