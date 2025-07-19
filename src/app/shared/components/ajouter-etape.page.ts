@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { AfterViewInit, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -27,7 +27,10 @@ import { EtapeService, EtapeCreationDto } from '../services/etape.service';
 
       <mat-form-field class="full-width" appearance="fill">
         <mat-label>Type de validation</mat-label>
-        <mat-select [(ngModel)]="typeValidation">
+        <mat-select
+          [(ngModel)]="typeValidation"
+          (selectionChange)="onTypeChanged()"
+        >
           <mat-option value="PASSPHRASE">Passphrase</mat-option>
           <mat-option value="CACHE">Cache</mat-option>
           <mat-option value="REPERE">Repère</mat-option>
@@ -58,6 +61,7 @@ import { EtapeService, EtapeCreationDto } from '../services/etape.service';
           <mat-label>Longitude cache</mat-label>
           <input matInput type="number" [(ngModel)]="longitudeCache" />
         </mat-form-field>
+        <div id="map" style="height: 300px; margin-bottom: 16px;"></div>
       </ng-container>
 
       <mat-form-field
@@ -92,7 +96,7 @@ import { EtapeService, EtapeCreationDto } from '../services/etape.service';
     MatButtonModule,
   ],
 })
-export class AjouterEtapePage {
+export class AjouterEtapePage implements AfterViewInit {
   chasseId!: number;
   ordre = 1;
   consigne = '';
@@ -104,10 +108,64 @@ export class AjouterEtapePage {
   repereRa = '';
   private etapeService = inject(EtapeService);
   private router = inject(Router);
+  private map!: google.maps.Map;
+  private marker!: google.maps.Marker;
 
   constructor(private route: ActivatedRoute) {
     this.route.queryParams.subscribe((params) => {
       this.chasseId = +params['chasseId'];
+    });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.typeValidation === 'CACHE') {
+      setTimeout(() => this.initMap(), 200);
+    }
+  }
+
+  onTypeChanged(): void {
+    if (this.typeValidation === 'CACHE') {
+      setTimeout(() => this.initMap(), 200);
+    }
+  }
+
+  private initMap(): void {
+    const center = {
+      lat: this.latitudeCache || 48.8566,
+      lng: this.longitudeCache || 2.3522,
+    };
+
+    this.map = new google.maps.Map(
+      document.getElementById('map') as HTMLElement,
+      {
+        center,
+        zoom: 12,
+      }
+    );
+
+    this.marker = new google.maps.Marker({
+      position: center,
+      map: this.map,
+      draggable: true,
+      icon: {
+        url: 'treasureChest.png',
+        scaledSize: new google.maps.Size(40, 40),
+      },
+    });
+
+    this.marker.addListener('dragend', (event: google.maps.MapMouseEvent) => {
+      if (event.latLng) {
+        this.latitudeCache = event.latLng.lat();
+        this.longitudeCache = event.latLng.lng();
+      }
+    });
+
+    this.map.addListener('click', (event: google.maps.MapMouseEvent) => {
+      if (event.latLng) {
+        this.latitudeCache = event.latLng.lat();
+        this.longitudeCache = event.latLng.lng();
+        this.marker.setPosition(event.latLng);
+      }
     });
   }
 
