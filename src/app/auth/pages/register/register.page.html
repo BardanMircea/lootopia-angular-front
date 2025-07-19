@@ -43,10 +43,11 @@
 
     <!-- RGPD -->
     <mat-checkbox formControlName="rgpdConsent">
-      J'accepte les conditions RGPD
-      <a href="#" (click)="ouvrirRgpdModal($event)"
-        >RGPD Termes et Conditions</a
+      J'accepte les conditions RGPD (
+      <a href="#" (click)="ouvrirRgpdModal($event)">
+        RGPD Termes et Conditions</a
       >
+      )
     </mat-checkbox>
     <mat-error
       *ngIf="form.get('rgpdConsent')?.touched && form.get('rgpdConsent')?.invalid"

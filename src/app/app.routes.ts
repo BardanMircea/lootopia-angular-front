@@ -62,6 +62,14 @@ export const appRoutes: Routes = [
           ),
       },
       {
+        path: 'mon-compte',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./shared/components/mon-compte.page').then(
+            (m) => m.MonComptePage
+          ),
+      },
+      {
         path: 'login',
         loadComponent: () =>
           import('./auth/pages/login/login.page').then((m) => m.LoginPage),

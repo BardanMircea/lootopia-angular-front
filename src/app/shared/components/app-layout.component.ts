@@ -34,6 +34,9 @@ import { UtilisateurService } from '../services/utilisateur.service';
           </ng-container>
 
           <ng-container *ngIf="isLoggedIn()">
+            <a mat-list-item routerLink="/mon-compte">👤 Géstion de compte</a>
+            <!-- 🔓 DECONNEXION -->
+            <a mat-list-item (click)="logout()">🚪 Déconnexion</a>
             <h4 style="margin-left: 8px; margin-top: 16px;">🎮 Joueur</h4>
             <a mat-list-item routerLink="/chasses-publiques"
               >🗺️ Chasses publiques</a
@@ -47,9 +50,6 @@ import { UtilisateurService } from '../services/utilisateur.service';
               >➕ Créer une chasse</a
             >
             <a mat-list-item routerLink="/chasses/mes">📚 Mes chasses</a>
-
-            <!-- 🔓 DECONNEXION -->
-            <a mat-list-item (click)="logout()">🚪 Déconnexion</a>
           </ng-container>
         </mat-nav-list>
       </mat-sidenav>
