@@ -176,9 +176,16 @@ export class CreerChassePage {
     );
 
     const marker = new google.maps.Marker({
-      position: { lat: this.latitudeCache, lng: this.longitudeCache },
-      map,
+      position: {
+        lat: this.latitudeCache || 48.8566,
+        lng: this.longitudeCache || 2.3522,
+      },
+      map: map,
       draggable: true,
+      icon: {
+        url: 'treasureChest.png',
+        scaledSize: new google.maps.Size(40, 40),
+      },
     });
 
     marker.addListener('dragend', (event: google.maps.MapMouseEvent) => {

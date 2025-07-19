@@ -55,6 +55,13 @@ export const appRoutes: Routes = [
         canActivate: [authGuard],
       },
       {
+        path: 'etapes/ajouter',
+        loadComponent: () =>
+          import('./shared/components/ajouter-etape.page').then(
+            (m) => m.AjouterEtapePage
+          ),
+      },
+      {
         path: 'login',
         loadComponent: () =>
           import('./auth/pages/login/login.page').then((m) => m.LoginPage),

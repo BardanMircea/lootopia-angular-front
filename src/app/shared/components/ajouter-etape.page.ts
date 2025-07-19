@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -103,6 +103,7 @@ export class AjouterEtapePage {
   longitudeCache = 0;
   repereRa = '';
   private etapeService = inject(EtapeService);
+  private router = inject(Router);
 
   constructor(private route: ActivatedRoute) {
     this.route.queryParams.subscribe((params) => {
@@ -112,6 +113,7 @@ export class AjouterEtapePage {
 
   soumettreEtape() {
     const dto: EtapeCreationDto = {
+      chasseId: this.chasseId,
       ordre: this.ordre,
       consigne: this.consigne,
       typeValidation: this.typeValidation as any,
@@ -125,8 +127,11 @@ export class AjouterEtapePage {
       repereRa: this.typeValidation === 'REPERE' ? this.repereRa : undefined,
     };
 
-    this.etapeService.creerEtape(this.chasseId, dto).subscribe({
-      next: () => alert('✅ Étape ajoutée avec succès !'),
+    this.etapeService.creerEtape(dto).subscribe({
+      next: () => {
+        alert('✅ Étape ajoutée avec succès !');
+        this.router.navigate(['/chasses/mes']);
+      },
       error: () => alert('❌ Erreur lors de l’ajout de l’étape.'),
     });
   }

@@ -1,4 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -109,7 +115,7 @@ import { TransactionService } from '../services/transaction.service';
           <label>Latitude : <input type="number" [(ngModel)]="lat" /></label>
           <label>Longitude : <input type="number" [(ngModel)]="lng" /></label>
         </div>
-        <div id="map" style="height: 400px; margin-top: 8px;"></div>
+        <div id="map" #mapRef style="height: 400px; margin-top: 8px;"></div>
         <button mat-raised-button color="primary" (click)="validerCreusage()">
           Valider le creusage
         </button>
@@ -152,6 +158,7 @@ import { TransactionService } from '../services/transaction.service';
   ],
 })
 export class MesParticipationsPage implements OnInit {
+  @ViewChild('mapRef') mapElementRef!: ElementRef;
   private participationService = inject(ParticipationService);
   private creusageService = inject(CreusageService);
   private utilisateurService = inject(UtilisateurService);
@@ -283,6 +290,7 @@ export class MesParticipationsPage implements OnInit {
           });
         }
       });
+      this.mapElementRef?.nativeElement.scrollIntoView({ behavior: 'smooth' });
     }, 100);
   }
 

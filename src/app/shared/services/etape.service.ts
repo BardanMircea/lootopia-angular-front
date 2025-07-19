@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface EtapeCreationDto {
+  chasseId?: number;
   ordre: number;
   consigne: string;
   typeValidation: 'PASSPHRASE' | 'CACHE' | 'REPERE';
@@ -17,11 +18,12 @@ export interface EtapeCreationDto {
   providedIn: 'root',
 })
 export class EtapeService {
-  private apiUrl = 'etapes';
+  private apiUrl = '/etapes';
 
   constructor(private http: HttpClient) {}
 
-  creerEtape(chasseId: number, etape: EtapeCreationDto): Observable<any> {
-    return this.http.post(`${this.apiUrl}/chasse/${chasseId}`, etape);
+  creerEtape(etape: EtapeCreationDto): Observable<any> {
+    console.log('Création de l’étape:', etape);
+    return this.http.post(`${this.apiUrl}`, etape);
   }
 }
