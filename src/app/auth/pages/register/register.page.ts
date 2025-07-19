@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from '../../services/auth.service';
 import { materialImports } from '../../../material';
 
@@ -10,12 +10,24 @@ import { materialImports } from '../../../material';
   selector: 'app-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
-  imports: [CommonModule, ReactiveFormsModule, ...materialImports],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    ...materialImports,
+  ],
 })
 export class RegisterPage {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
-  private router = inject(Router);
+  private dialog = inject(MatDialog);
+
+  @ViewChild('rgpdModal') rgpdModal: any;
+
+  ouvrirRgpdModal(event: Event) {
+    event.preventDefault();
+    this.dialog.open(this.rgpdModal);
+  }
 
   form = this.fb.group({
     pseudo: ['', Validators.required],

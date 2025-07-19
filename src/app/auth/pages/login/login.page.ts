@@ -31,6 +31,8 @@ export class LoginPage {
     this.loading = true;
     this.error = '';
 
+    const { email, motDePasse } = this.loginForm.value;
+
     this.authService.login(this.loginForm.value).subscribe({
       next: (res) => {
         this.router.navigate(['/dashboard']);
@@ -41,8 +43,9 @@ export class LoginPage {
       },
       error: (err) => {
         this.error = err.error?.message || 'Identifiants invalides';
+        this.loginForm.reset();
+        this.loading = false;
       },
-      complete: () => (this.loading = false),
     });
   }
 }

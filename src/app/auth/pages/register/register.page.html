@@ -44,6 +44,9 @@
     <!-- RGPD -->
     <mat-checkbox formControlName="rgpdConsent">
       J'accepte les conditions RGPD
+      <a href="#" (click)="ouvrirRgpdModal($event)"
+        >RGPD Termes et Conditions</a
+      >
     </mat-checkbox>
     <mat-error
       *ngIf="form.get('rgpdConsent')?.touched && form.get('rgpdConsent')?.invalid"
@@ -69,3 +72,15 @@
   ✅ Votre compte a bien été enregistré. Un email d’activation vous a été
   envoyé. Veuillez vérifier votre boîte mail.
 </mat-card>
+<ng-template #rgpdModal>
+  <h2 mat-dialog-title>RGPD - Termes et Conditions</h2>
+  <mat-dialog-content>
+    <p>
+      En vous inscrivant, vous acceptez que vos données soient utilisées
+      uniquement dans le cadre du fonctionnement du site Lootopia. Vos
+      informations ne seront ni revendues ni utilisées à des fins commerciales.
+      Vous pouvez à tout moment exercer vos droits de suppression ou
+      rectification de vos données.
+    </p>
+  </mat-dialog-content>
+</ng-template>
