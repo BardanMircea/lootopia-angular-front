@@ -24,7 +24,6 @@ import { ChasseService } from '../services/chasse.service';
         <mat-label>Description</mat-label>
         <input matInput [(ngModel)]="description" />
       </mat-form-field>
-
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Latitude</mat-label>
         <input matInput type="number" [(ngModel)]="latitudeCache" />
@@ -34,12 +33,47 @@ import { ChasseService } from '../services/chasse.service';
         <mat-label>Longitude</mat-label>
         <input matInput type="number" [(ngModel)]="longitudeCache" />
       </mat-form-field>
-
+      <p>
+        Placer simplement la Cache sur la carte pour enregistrer ses
+        coordonnées:
+      </p>
       <div id="map" style="height: 300px; margin-bottom: 16px;"></div>
 
       <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Date de début</mat-label>
+        <input matInput type="date" [(ngModel)]="dateDebut" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Date de fin</mat-label>
+        <input matInput type="date" [(ngModel)]="dateFin" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Nombre de participants</mat-label>
+        <input
+          matInput
+          type="number"
+          step="1"
+          min="0"
+          [(ngModel)]="nombreParticipants"
+          placeholder="Illimité"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Nombre d'étapes</mat-label>
+        <input
+          matInput
+          type="number"
+          step="1"
+          min="0"
+          [(ngModel)]="nombreEtapes"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="full-width">
         <mat-label>Type de monde</mat-label>
-        <mat-select [(ngModel)]="monde">
+        <mat-select [(ngModel)]="typeMonde">
           <mat-option value="CARTOGRAPHIQUE">Cartographique</mat-option>
           <mat-option value="REEL">Réel</mat-option>
         </mat-select>
@@ -52,19 +86,32 @@ import { ChasseService } from '../services/chasse.service';
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Frais de participation</mat-label>
-        <input matInput type="number" [(ngModel)]="fraisParticipation" />
+        <input
+          matInput
+          type="number"
+          step="1"
+          min="0"
+          [(ngModel)]="fraisParticipation"
+        />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Type de récompense</mat-label>
         <mat-select [(ngModel)]="typeRecompense">
           <mat-option value="COURONNES">Couronnes</mat-option>
+          <mat-option value="ARTEFACT">Artefact</mat-option>
         </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Montant de la récompense</mat-label>
-        <input matInput type="number" [(ngModel)]="montantRecompense" />
+        <input
+          matInput
+          step="1"
+          min="0"
+          type="number"
+          [(ngModel)]="montantRecompense"
+        />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
@@ -105,14 +152,14 @@ export class CreerChassePage {
   description = '';
   latitudeCache = 48.8566;
   longitudeCache = 2.3522;
-  monde = 'CARTOGRAPHIQUE';
+  typeMonde = 'CARTOGRAPHIQUE';
   messageCacheTrouve = '';
   fraisParticipation = 0;
   typeRecompense = 'COURONNES';
   montantRecompense = 100;
   visibilite = 'PUBLIC';
   titre = '';
-  nombreParticipants = 0;
+  nombreParticipants = null;
   nombreEtapes = 0;
   dateDebut = new Date().toISOString().split('T')[0];
   dateFin = new Date(new Date().setDate(new Date().getDate() + 7))
@@ -156,16 +203,16 @@ export class CreerChassePage {
         description: this.description,
         latitudeCache: this.latitudeCache,
         longitudeCache: this.longitudeCache,
-        monde: this.monde,
+        monde: this.typeMonde,
         messageCacheTrouve: this.messageCacheTrouve,
         fraisParticipation: this.fraisParticipation,
         typeRecompense: this.typeRecompense,
         montantRecompense: this.montantRecompense,
         visibilite: this.visibilite,
         titre: this.titre,
-        dateDebut: this.dateDebut,
-        dateFin: this.dateFin,
-        nombreParticipants: this.nombreParticipants,
+        dateDebut: this.dateDebut + 'T00:00:00',
+        dateFin: this.dateFin + 'T00:00:00',
+        nombreParticipants: Number(this.nombreParticipants),
         nombreEtapes: this.nombreEtapes,
       })
       .subscribe(() => {

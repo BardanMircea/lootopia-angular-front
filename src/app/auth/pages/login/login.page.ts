@@ -40,7 +40,7 @@ export class LoginPage {
         );
       },
       error: (err) => {
-        this.error = err.error?.message || 'Erreur de connexion';
+        this.error = err.error?.message || 'Identifiants invalides';
       },
       complete: () => (this.loading = false),
     });

@@ -1,12 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  ChasseService,
-  Chasse,
-  NouvelleChasse,
-} from '../services/chasse.service';
+import { ChasseService, NouvelleChasse } from '../services/chasse.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -16,20 +13,57 @@ import { MatButtonModule } from '@angular/material/button';
     <div *ngIf="chasses.length === 0">Aucune chasse pour le moment.</div>
 
     <mat-card *ngFor="let chasse of chasses" style="margin-bottom: 16px;">
-      <mat-card-title>{{ chasse.titre || 'Chasse sans titre' }}</mat-card-title>
       <mat-card-content>
-        <p><strong>Description :</strong> {{ chasse.description }}</p>
         <p>
-          <strong>Cache :</strong> ({{ chasse.latitudeCache }},
+          <strong>Titre Chasse :</strong>
+          {{ chasse.titre || 'Chasse sans titre' }}
+        </p>
+        <p>
+          <strong>Description :</strong>
+          {{ chasse.description || 'Chasse sans description' }}
+        </p>
+        <p>
+          <strong>Coordonnées Cache :</strong> ({{ chasse.latitudeCache }},
           {{ chasse.longitudeCache }})
+        </p>
+        <p><strong>Date de début :</strong> {{ chasse.dateDebut | date }}</p>
+        <p><strong>Date de fin :</strong> {{ chasse.dateFin | date }}</p>
+        <p>
+          <strong>Monde :</strong>
+          {{ chasse.monde || 'Monde non spécifié' }}
+        </p>
+        <p><strong>Visibilité :</strong> {{ chasse.visibilite || 'Public' }}</p>
+        <p>
+          <strong>Nombre de participants :</strong>
+          {{ chasse.nombreParticipants }}
+        </p>
+        <p><strong>Nombre d'étapes :</strong> {{ chasse.nombreEtapes }}</p>
+        <p>
+          <strong>Type de récompense :</strong>
+          {{ chasse.typeRecompense || 'Aucune' }}
+        </p>
+        <p>
+          <strong>Montant de la récompense :</strong>
+          {{ chasse.montantRecompense || 0 }}
+          🪙
+        </p>
+        <p>
+          <strong>Frais de participation :</strong>
+          {{ chasse.fraisParticipation || 0 }} 🪙
         </p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-stroked-button color="accent">✏️ Modifier</button>
+        <button
+          mat-stroked-button
+          color="accent"
+          [routerLink]="['/chasses', chasse.id, 'modifier']"
+        >
+          ✏️ Modifier
+        </button>
       </mat-card-actions>
     </mat-card>
   `,
-  imports: [CommonModule, MatCardModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, RouterLink],
 })
 export class MesChassesPage implements OnInit {
   private chasseService = inject(ChasseService);

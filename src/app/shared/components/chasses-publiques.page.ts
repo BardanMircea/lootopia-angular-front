@@ -25,15 +25,13 @@ import { ChasseDetailsDialogComponent } from './chasse-details-dialog.component'
       <div *ngIf="chasses.length === 0">Aucune chasse disponible.</div>
 
       <mat-card *ngFor="let chasse of chasses" class="chasse-card">
-        <mat-card-title>{{ chasse.titre }}</mat-card-title>
         <mat-card-content>
+          <p><strong>Titre :</strong> {{ chasse.titre }}</p>
           <p><strong>Monde :</strong> {{ chasse.monde }}</p>
           <p>
-            <strong>Dates :</strong> {{ chasse.dateDebut | date }} →
+            <strong>Durée :</strong> {{ chasse.dateDebut | date }} →
             {{ chasse.dateFin | date }}
           </p>
-          <p *ngIf="chasse.description">{{ chasse.description }}</p>
-          <p><strong>Organisateur :</strong> {{ chasse.createur }}</p>
         </mat-card-content>
         <mat-card-actions>
           <button
@@ -132,6 +130,7 @@ export class ChassesPubliquesPage implements OnInit {
       .subscribe({
         next: (data) => {
           this.chasses = data.content;
+          console.log('Chasses chargées :', this.chasses);
           this.totalElements = data.totalElements;
           if (this.participationsLoaded) {
             this.mapChasses();
@@ -189,12 +188,13 @@ export class ChassesPubliquesPage implements OnInit {
   openDetails(chasse: Chasse) {
     this.dialog.open(ChasseDetailsDialogComponent, {
       data: {
-        titre: chasse.titre,
         description: chasse.description,
         fraisParticipation: chasse.fraisParticipation,
         nombreParticipants: chasse.nombreParticipants,
         montantRecompense: chasse.montantRecompense,
         typeRecompense: 'Couronnes',
+        nombreEtapes: chasse.nombreEtapes,
+        createur: chasse.createur,
       },
     });
   }

@@ -15,22 +15,31 @@ import { MatButtonModule } from '@angular/material/button';
   template: `
     <h2 mat-dialog-title>Détails de la chasse</h2>
     <mat-card>
-      <mat-card-title>{{ data.titre }}</mat-card-title>
       <mat-card-content>
-        <p><strong>Description :</strong> {{ data.description || '—' }}</p>
         <p>
-          <strong>Frais de participation :</strong>
-          {{ data.fraisParticipation }} 🪙
+          <strong>Description :</strong>
+          {{ data.description || 'Chasse sans description' }}
         </p>
         <p>
           <strong>Nombre de participants :</strong>
           {{ data.nombreParticipants }}
         </p>
+        <p><strong>Nombre d'étapes :</strong> {{ data.nombreEtapes }}</p>
+
         <p>
           <strong>Montant de la récompense :</strong>
-          {{ data.montantRecompense }} 🪙
+          {{ data.montantRecompense || 0 }}
+          🪙
         </p>
-        <p><strong>Type de récompense :</strong> {{ data.typeRecompense }}</p>
+        <p>
+          <strong>Type de récompense :</strong>
+          {{ data.typeRecompense || 'Aucune' }}
+        </p>
+        <p>
+          <strong>Frais de participation :</strong>
+          {{ data.fraisParticipation || 0 }} 🪙
+        </p>
+        <p><strong>Organisateur :</strong> {{ data.createur }}</p>
       </mat-card-content>
       <mat-card-actions align="end">
         <button mat-button (click)="close()">Fermer</button>

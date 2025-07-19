@@ -31,8 +31,11 @@ import { TransactionService } from '../services/transaction.service';
       </div>
 
       <mat-card *ngFor="let p of participations" class="participation-card">
-        <mat-card-title>{{ p.titreChasse }}</mat-card-title>
         <mat-card-content>
+          <p>
+            <strong>Chasse :</strong>
+            {{ p.titreChasse }}
+          </p>
           <p>
             <strong>Participe depuis :</strong>
             {{ p.inscritDepuis | date : 'mediumDate' }}
@@ -156,18 +159,6 @@ export class MesParticipationsPage implements OnInit {
   private transactionService = inject(TransactionService);
   creusageDebloque: Record<number, boolean> = {};
   selectedMarker: google.maps.Marker | null = null;
-  customCrossIcon = {
-    url:
-      'data:image/svg+xml;charset=UTF-8,' +
-      encodeURIComponent(`
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
-        <line x1="4" y1="4" x2="28" y2="28" stroke="red" stroke-width="4"/>
-        <line x1="28" y1="4" x2="4" y2="28" stroke="red" stroke-width="4"/>
-      </svg>
-    `),
-    scaledSize: new google.maps.Size(32, 32),
-    anchor: new google.maps.Point(16, 16),
-  };
 
   participations: Participation[] = [];
   loading = true;
@@ -281,10 +272,14 @@ export class MesParticipationsPage implements OnInit {
           if (this.selectedMarker) {
             this.selectedMarker.setMap(null);
           }
+
           this.selectedMarker = new google.maps.Marker({
             position: { lat: this.lat, lng: this.lng },
-            map,
-            icon: this.customCrossIcon,
+            map: map,
+            icon: {
+              url: 'xspot.png',
+              scaledSize: new google.maps.Size(40, 40),
+            },
           });
         }
       });

@@ -19,6 +19,7 @@ export interface Chasse {
 }
 
 export interface NouvelleChasse {
+  id?: number;
   titre: string;
   description?: string;
   latitudeCache: number;
@@ -41,11 +42,21 @@ export class ChasseService {
 
   constructor(private http: HttpClient) {}
 
+  updateChasse(chasseId: number, chasse: any) {
+    console.log('Mise à jour de chasse:', chasseId);
+    return this.http.put(`${this.apiUrl}/${chasseId}`, chasse);
+  }
+
+  getChasseParId(chasseId: number) {
+    return this.http.get<Chasse>(`${this.apiUrl}/${chasseId}`);
+  }
+
   getChassesOrganisateur(): Observable<NouvelleChasse[]> {
     return this.http.get<NouvelleChasse[]>(`${this.apiUrl}/mes-chasses`, {});
   }
 
   creerChasse(chasse: NouvelleChasse): Observable<Chasse> {
+    console.log('Création de chasse:', chasse);
     return this.http.post<Chasse>(`${this.apiUrl}`, chasse);
   }
 

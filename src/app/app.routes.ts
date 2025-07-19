@@ -47,6 +47,14 @@ export const appRoutes: Routes = [
         canActivate: [authGuard],
       },
       {
+        path: 'chasses/:id/modifier',
+        loadComponent: () =>
+          import('./shared/components/modifier-chasse.page').then(
+            (m) => m.ModifierChassePage
+          ),
+        canActivate: [authGuard],
+      },
+      {
         path: 'login',
         loadComponent: () =>
           import('./auth/pages/login/login.page').then((m) => m.LoginPage),
