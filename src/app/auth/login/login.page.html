@@ -1,36 +1,38 @@
-<mat-card>
-  <form [formGroup]="loginForm" (ngSubmit)="submit()" novalidate>
-    <!-- Email -->
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" type="email" />
-      <mat-error
-        *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+<div class="content-wrapper">
+  <mat-card>
+    <form [formGroup]="loginForm" (ngSubmit)="submit()" novalidate>
+      <!-- Email -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" />
+        <mat-error
+          *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+        >
+          Email requis
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Mot de passe -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Mot de passe</mat-label>
+        <input matInput formControlName="motDePasse" type="password" />
+        <mat-error
+          *ngIf="loginForm.get('motDePasse')?.touched && loginForm.get('motDePasse')?.invalid"
+        >
+          Mot de passe requis
+        </mat-error>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="loading || loginForm.invalid"
       >
-        Email requis
-      </mat-error>
-    </mat-form-field>
+        Se connecter
+      </button>
 
-    <!-- Mot de passe -->
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Mot de passe</mat-label>
-      <input matInput formControlName="motDePasse" type="password" />
-      <mat-error
-        *ngIf="loginForm.get('motDePasse')?.touched && loginForm.get('motDePasse')?.invalid"
-      >
-        Mot de passe requis
-      </mat-error>
-    </mat-form-field>
-
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      [disabled]="loading || loginForm.invalid"
-    >
-      Se connecter
-    </button>
-
-    <p *ngIf="error" style="color: red; margin-top: 10px">{{ error }}</p>
-  </form>
-</mat-card>
+      <p *ngIf="error" style="color: red; margin-top: 10px">{{ error }}</p>
+    </form>
+  </mat-card>
+</div>

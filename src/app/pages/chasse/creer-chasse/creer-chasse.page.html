@@ -1,105 +1,113 @@
-<h2>➕ Créer une nouvelle chasse</h2>
-<mat-card>
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Titre</mat-label>
-    <input matInput [(ngModel)]="titre" />
-  </mat-form-field>
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Description</mat-label>
-    <input matInput [(ngModel)]="description" />
-  </mat-form-field>
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Latitude</mat-label>
-    <input matInput type="number" [(ngModel)]="latitudeCache" />
-  </mat-form-field>
+<div class="content-wrapper">
+  <h2>➕ Créer une nouvelle chasse</h2>
+  <mat-card>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Titre</mat-label>
+      <input matInput [(ngModel)]="titre" />
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Description</mat-label>
+      <input matInput [(ngModel)]="description" />
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Latitude</mat-label>
+      <input matInput type="number" [(ngModel)]="latitudeCache" />
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Longitude</mat-label>
-    <input matInput type="number" [(ngModel)]="longitudeCache" />
-  </mat-form-field>
-  <p>
-    Placer simplement la Cache sur la carte pour enregistrer ses coordonnées:
-  </p>
-  <div id="map" style="height: 300px; margin-bottom: 16px"></div>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Longitude</mat-label>
+      <input matInput type="number" [(ngModel)]="longitudeCache" />
+    </mat-form-field>
+    <p>
+      Placer simplement la Cache sur la carte pour enregistrer ses coordonnées:
+    </p>
+    <div id="map" style="height: 300px; margin-bottom: 16px"></div>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Date de début</mat-label>
-    <input matInput type="date" [(ngModel)]="dateDebut" />
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Date de début</mat-label>
+      <input matInput type="date" [(ngModel)]="dateDebut" />
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Date de fin</mat-label>
-    <input matInput type="date" [(ngModel)]="dateFin" />
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Date de fin</mat-label>
+      <input matInput type="date" [(ngModel)]="dateFin" />
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Nombre de participants</mat-label>
-    <input
-      matInput
-      type="number"
-      step="1"
-      min="0"
-      [(ngModel)]="nombreParticipants"
-      placeholder="Illimité"
-    />
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Nombre de participants</mat-label>
+      <input
+        matInput
+        type="number"
+        step="1"
+        min="0"
+        [(ngModel)]="nombreParticipants"
+        placeholder="Illimité"
+      />
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Nombre d'étapes</mat-label>
-    <input matInput type="number" step="1" min="0" [(ngModel)]="nombreEtapes" />
-  </mat-form-field>
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Type de monde</mat-label>
-    <mat-select [(ngModel)]="typeMonde">
-      <mat-option value="CARTOGRAPHIQUE">Cartographique</mat-option>
-      <mat-option value="REEL">Réel</mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Nombre d'étapes</mat-label>
+      <input
+        matInput
+        type="number"
+        step="1"
+        min="0"
+        [(ngModel)]="nombreEtapes"
+      />
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Type de monde</mat-label>
+      <mat-select [(ngModel)]="typeMonde">
+        <mat-option value="CARTOGRAPHIQUE">Cartographique</mat-option>
+        <mat-option value="REEL">Réel</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Message lors de la découverte du cache</mat-label>
-    <input matInput [(ngModel)]="messageCacheTrouve" />
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Message lors de la découverte du cache</mat-label>
+      <input matInput [(ngModel)]="messageCacheTrouve" />
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Frais de participation</mat-label>
-    <input
-      matInput
-      type="number"
-      step="1"
-      min="0"
-      [(ngModel)]="fraisParticipation"
-    />
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Frais de participation</mat-label>
+      <input
+        matInput
+        type="number"
+        step="1"
+        min="0"
+        [(ngModel)]="fraisParticipation"
+      />
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Type de récompense</mat-label>
-    <mat-select [(ngModel)]="typeRecompense">
-      <mat-option value="COURONNES">Couronnes</mat-option>
-      <mat-option value="ARTEFACT">Artefact</mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Type de récompense</mat-label>
+      <mat-select [(ngModel)]="typeRecompense">
+        <mat-option value="COURONNES">Couronnes</mat-option>
+        <mat-option value="ARTEFACT">Artefact</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Montant de la récompense</mat-label>
-    <input
-      matInput
-      step="1"
-      min="0"
-      type="number"
-      [(ngModel)]="montantRecompense"
-    />
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Montant de la récompense</mat-label>
+      <input
+        matInput
+        step="1"
+        min="0"
+        type="number"
+        [(ngModel)]="montantRecompense"
+      />
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Visibilité</mat-label>
-    <mat-select [(ngModel)]="visibilite">
-      <mat-option value="PUBLIC">Publique</mat-option>
-      <mat-option value="PRIVE">Privée</mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Visibilité</mat-label>
+      <mat-select [(ngModel)]="visibilite">
+        <mat-option value="PUBLIC">Publique</mat-option>
+        <mat-option value="PRIVE">Privée</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <button mat-raised-button color="primary" (click)="creerChasse()">
-    ✅ Créer la chasse
-  </button>
-</mat-card>
+    <button mat-raised-button color="primary" (click)="creerChasse()">
+      ✅ Créer la chasse
+    </button>
+  </mat-card>
+</div>

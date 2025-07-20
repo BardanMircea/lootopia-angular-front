@@ -1,29 +1,31 @@
-<h2>👤 Mon compte</h2>
+<div class="content-wrapper">
+  <h2>👤 Mon compte</h2>
 
-<mat-card *ngIf="utilisateur">
-  <p><strong>Email :</strong> {{ utilisateur.email }}</p>
-  <button mat-stroked-button color="accent">✏️ Modifier</button>
+  <mat-card *ngIf="utilisateur">
+    <p><strong>Email :</strong> {{ utilisateur.email }}</p>
+    <button mat-stroked-button color="accent">✏️ Modifier</button>
 
-  <p><strong>Mot de passe :</strong> ••••••••</p>
-  <button mat-stroked-button color="accent">✏️ Modifier</button>
+    <p><strong>Mot de passe :</strong> ••••••••</p>
+    <button mat-stroked-button color="accent">✏️ Modifier</button>
 
-  <p><strong>Pseudo :</strong> {{ utilisateur.pseudo }}</p>
-  <button mat-stroked-button color="accent">✏️ Modifier</button>
+    <p><strong>Pseudo :</strong> {{ utilisateur.pseudo }}</p>
+    <button mat-stroked-button color="accent">✏️ Modifier</button>
 
-  <p>
-    <strong>Date de création :</strong> {{ utilisateur.dateCreation |
-    date:'mediumDate' }}
-  </p>
+    <p>
+      <strong>Date de création :</strong> {{ utilisateur.dateCreation |
+      date:'mediumDate' }}
+    </p>
 
-  <p>
-    <strong>Partenaire :</strong> {{ utilisateur.partenaire ? '✅ Oui' : '❌
-    Non' }}
-  </p>
-  <button mat-stroked-button color="accent">✏️ Modifier</button>
+    <p>
+      <strong>Partenaire :</strong> {{ utilisateur.partenaire ? '✅ Oui' : '❌
+      Non' }}
+    </p>
+    <button mat-stroked-button color="accent">✏️ Modifier</button>
 
-  <p>
-    <strong>MFA activée :</strong> {{ utilisateur.mfaActive ? '✅ Oui' : '❌
-    Non' }}
-  </p>
-  <button mat-stroked-button color="accent">✏️ Activer / désactiver</button>
-</mat-card>
+    <p>
+      <strong>MFA activée :</strong> {{ utilisateur.mfaActive ? '✅ Oui' : '❌
+      Non' }}
+    </p>
+    <button mat-stroked-button color="accent">✏️ Activer / désactiver</button>
+  </mat-card>
+</div>

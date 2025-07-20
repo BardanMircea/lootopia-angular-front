@@ -1,32 +1,34 @@
-<h2 mat-dialog-title>Détails de la chasse</h2>
-<mat-card>
-  <mat-card-content>
-    <p>
-      <strong>Description :</strong>
-      {{ data.description || "Chasse sans description" }}
-    </p>
-    <p>
-      <strong>Nombre de participants :</strong>
-      {{ data.nombreParticipants }}
-    </p>
-    <p><strong>Nombre d'étapes :</strong> {{ data.nombreEtapes }}</p>
+<div class="content-wrapper">
+  <h2 mat-dialog-title>Détails de la chasse</h2>
+  <mat-card>
+    <mat-card-content>
+      <p>
+        <strong>Description :</strong>
+        {{ data.description || "Chasse sans description" }}
+      </p>
+      <p>
+        <strong>Nombre de participants :</strong>
+        {{ data.nombreParticipants }}
+      </p>
+      <p><strong>Nombre d'étapes :</strong> {{ data.nombreEtapes }}</p>
 
-    <p>
-      <strong>Montant de la récompense :</strong>
-      {{ data.montantRecompense || 0 }}
-      🪙
-    </p>
-    <p>
-      <strong>Type de récompense :</strong>
-      {{ data.typeRecompense || "Aucune" }}
-    </p>
-    <p>
-      <strong>Frais de participation :</strong>
-      {{ data.fraisParticipation || 0 }} 🪙
-    </p>
-    <p><strong>Organisateur :</strong> {{ data.createur }}</p>
-  </mat-card-content>
-  <mat-card-actions align="end">
-    <button mat-button (click)="close()">Fermer</button>
-  </mat-card-actions>
-</mat-card>
+      <p>
+        <strong>Montant de la récompense :</strong>
+        {{ data.montantRecompense || 0 }}
+        🪙
+      </p>
+      <p>
+        <strong>Type de récompense :</strong>
+        {{ data.typeRecompense || "Aucune" }}
+      </p>
+      <p>
+        <strong>Frais de participation :</strong>
+        {{ data.fraisParticipation || 0 }} 🪙
+      </p>
+      <p><strong>Organisateur :</strong> {{ data.createur }}</p>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-button (click)="close()">Fermer</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

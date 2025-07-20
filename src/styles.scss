@@ -1,4 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.content-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+
+  // Assure que le contenu ne déborde jamais
+  width: 100%;
+  box-sizing: border-box;
+
+  // Responsive : marges et padding plus petits sur très petits écrans
+  @media (max-width: 600px) {
+    padding: 0.5rem;
+  }
+}

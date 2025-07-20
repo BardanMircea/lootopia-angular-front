@@ -1,56 +1,73 @@
-<mat-sidenav-container class="layout-container">
-  <mat-sidenav mode="side" opened>
-    <mat-nav-list>
-      <ng-container *ngIf="!isLoggedIn()">
-        <a mat-list-item routerLink="/login">🔐 Se connecter</a>
-        <a mat-list-item routerLink="/register">📝 Créer un compte</a>
-      </ng-container>
+<div class="content-wrapper">
+  <mat-sidenav-container class="layout-container">
+    <mat-sidenav mode="side" opened>
+      <mat-nav-list>
+        <ng-container *ngIf="!isLoggedIn()">
+          <a mat-list-item routerLink="/login">🔐 Se connecter</a>
+          <a mat-list-item routerLink="/register">📝 Créer un compte</a>
+        </ng-container>
 
-      <ng-container *ngIf="isLoggedIn() && role === 'ADMIN'">
-        <a mat-list-item routerLink="/admin/utilisateurs"
-          >🛡️ Gérer les utilisateurs</a
+        <ng-container *ngIf="isLoggedIn()">
+          <p
+            style="
+              justify-content: center;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+            "
+          >
+            Bonjour, <strong>{{ pseudo() }}</strong>
+          </p>
+          <br />
+        </ng-container>
+
+        <ng-container *ngIf="isLoggedIn() && role === 'ADMIN'">
+          <a mat-list-item routerLink="/admin/utilisateurs"
+            >🛡️ Gérer les utilisateurs</a
+          >
+        </ng-container>
+
+        <a
+          *ngIf="isLoggedIn() && role === 'USER'"
+          mat-list-item
+          routerLink="/mon-compte"
+          >👤 Géstion de compte</a
         >
-      </ng-container>
 
-      <a
-        *ngIf="isLoggedIn() && role === 'USER'"
-        mat-list-item
-        routerLink="/mon-compte"
-        >👤 Géstion de compte</a
-      >
-      <!-- 🔓 DECONNEXION -->
-      <a *ngIf="isLoggedIn()" mat-list-item (click)="logout()"
-        >🚪 Déconnexion</a
-      >
-
-      <ng-container *ngIf="isLoggedIn() && role === 'USER'">
-        <h4 style="margin-left: 8px; margin-top: 16px">🎮 Joueur</h4>
-        <a mat-list-item routerLink="/chasses-publiques"
-          >🗺️ Chasses publiques</a
-        >
-        <a mat-list-item routerLink="/mes-participations"
-          >🎯 Mes participations</a
+        <!-- 🔓 DECONNEXION -->
+        <a *ngIf="isLoggedIn()" mat-list-item (click)="logout()"
+          >🚪 Déconnexion</a
         >
 
-        <h4 style="margin-left: 8px; margin-top: 16px">🛠️ Organisateur</h4>
-        <a mat-list-item routerLink="/chasses/nouvelle">➕ Créer une chasse</a>
-        <a mat-list-item routerLink="/chasses/mes">📚 Mes chasses</a>
-      </ng-container>
-    </mat-nav-list>
-  </mat-sidenav>
+        <ng-container *ngIf="isLoggedIn() && role === 'USER'">
+          <h4 style="margin-left: 8px; margin-top: 16px">🎮 Joueur</h4>
+          <a mat-list-item routerLink="/chasses-publiques"
+            >🗺️ Chasses publiques</a
+          >
+          <a mat-list-item routerLink="/mes-participations"
+            >🎯 Mes participations</a
+          >
 
-  <mat-sidenav-content>
-    <mat-toolbar *ngIf="isLoggedIn()" color="primary">
-      <span style="margin-left: auto">
-        Connecté en tant que <strong>{{ pseudo() }}</strong
-        ><br />
-        <div *ngIf="role === 'USER'">
-          Solde 💰: {{ this.soldeCouronnes() }} couronnes
-        </div>
-      </span>
-    </mat-toolbar>
-    <main style="padding: 1rem">
-      <router-outlet />
-    </main>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+          <h4 style="margin-left: 8px; margin-top: 16px">🛠️ Organisateur</h4>
+          <a mat-list-item routerLink="/chasses/nouvelle"
+            >➕ Créer une chasse</a
+          >
+          <a mat-list-item routerLink="/chasses/mes">📚 Mes chasses</a>
+        </ng-container>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <mat-toolbar *ngIf="isLoggedIn()" color="primary">
+        <span style="margin-left: auto">
+          <div *ngIf="role === 'USER'">
+            Solde 💰: {{ this.soldeCouronnes() }} couronnes
+          </div>
+        </span>
+      </mat-toolbar>
+      <main style="padding: 1rem">
+        <router-outlet />
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
