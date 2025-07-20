@@ -1,7 +1,10 @@
 🎮 Lootopia Frontend
+
 Interface web Angular du projet Lootopia – un jeu de chasse au trésor interactif où les joueurs peuvent créer, rejoindre, et creuser pour dénicher des récompenses virtuelles.
 
+
 🧱 Stack technique
+
 Angular 18 (avec composants standalone)
 
 Angular Material (UI)
@@ -12,7 +15,10 @@ JWT Auth avec LocalStorage
 
 API RESTful (backend Spring Boot)
 
+
 📁 Structure principale du repo
+
+
 src/
 
 ├── app/
@@ -33,8 +39,12 @@ src/
 
 ├── assets/icons/           # Icônes (treasureChest.jpg)
 
+
 ✅ Fonctionnalités implémentées
+
+
 🔐 Authentification
+
 Création de compte (avec acceptation RGPD)
 
 Activation de compte par lien (token)
@@ -46,6 +56,7 @@ Gestion du token JWT + rôle utilisateur
 Affichage dynamique des menus selon le rôle (USER, ADMIN)
 
 Déconnexion
+
 
 🎮 Joueur (ROLE_USER)
 Voir les chasses publiques
@@ -62,6 +73,7 @@ Voir sa progression et les récompenses obtenues
 
 Page "Gestion du compte" (pseudo, email, mot de passe, MFA, etc.)
 
+
 🛠️ Organisateur (ROLE_USER)
 Créer une nouvelle chasse
 
@@ -77,6 +89,7 @@ Validation par cache géographique (avec carte interactive + coffre)
 
 Modifier une chasse
 
+
 🛡️ Administrateur (ROLE_ADMIN)
 Accès exclusif à la page "Gestion des utilisateurs"
 
@@ -85,6 +98,7 @@ Voir tous les utilisateurs (pseudo, email partiel, type de compte)
 Supprimer un utilisateur de la base
 
 Accès interdit à toutes les pages USER
+
 
 🧪 Fonctionnalités annexes
 Synchronisation du rôle utilisateur dans localStorage
@@ -95,6 +109,7 @@ Compte à rebours visible après un creusage échoué
 
 Gestions d'états (spinner, messages d'erreurs, succès)
 
+
 🧭 Navigation dynamique
 L’interface adapte dynamiquement les éléments affichés :
 
@@ -103,6 +118,7 @@ Si non connecté → pages login / register uniquement
 Si connecté en USER → pages joueur + organisateur
 
 Si connecté en ADMIN → uniquement la page admin + déconnexion
+
 
 🧰 À venir (non inclus dans le MVP)
 Système complet de MFA
