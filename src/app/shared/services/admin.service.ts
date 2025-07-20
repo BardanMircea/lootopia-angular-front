@@ -20,7 +20,7 @@ export class AdminService {
     return this.http.delete(`${this.apiUrl}/user/${id}`);
   }
 
-  getAllUtilisateurs() {
+  getAllUtilisateurs(): Observable<Utilisateur[]> {
     return this.http.get<Utilisateur[]>(`${this.apiUrl}/users`);
   }
 }

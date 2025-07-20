@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { AdminService } from '../services/admin.service';
+import { AdminService, Utilisateur } from '../services/admin.service';
 
 @Component({
   standalone: true,
@@ -73,12 +73,15 @@ import { AdminService } from '../services/admin.service';
 })
 export class AdminGestionUtilisateursPage implements OnInit {
   private adminService = inject(AdminService);
-  utilisateurs: any[] = [];
+  utilisateurs: Utilisateur[] = [];
   colonnes = ['pseudo', 'email', 'partenaire', 'actions'];
 
   ngOnInit(): void {
     this.adminService.getAllUtilisateurs().subscribe({
-      next: (data) => (this.utilisateurs = data),
+      next: (data) => {
+        this.utilisateurs = data;
+        console.log('Utilisateurs chargés:', this.utilisateurs);
+      },
       error: () => alert('Erreur chargement utilisateurs'),
     });
   }
