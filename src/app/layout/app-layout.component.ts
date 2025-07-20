@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ViewChild } from '@angular/core';
 import { RouterOutlet, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -32,6 +32,9 @@ export class AppLayoutComponent {
   soldeCouronnes = computed(() => this.utilisateurService.soldeCouronnes());
   pseudo = () => this.auth.getUserInfo()?.pseudo;
   role: string = '';
+  @ViewChild('drawer') drawer: any;
+  drawerOpened = true;
+  isSmallScreen: boolean = false;
 
   ngOnInit() {
     this.updateRoleFromLocalStorage();
@@ -43,6 +46,13 @@ export class AppLayoutComponent {
     if (email) {
       this.utilisateurService.mettreAJourSolde(email);
     }
+
+    this.isSmallScreen = window.innerWidth < 768;
+    window.addEventListener('resize', () => {
+      this.isSmallScreen = window.innerWidth < 768;
+      if (this.isSmallScreen && this.drawer) this.drawer.close();
+      if (!this.isSmallScreen && this.drawer) this.drawer.open();
+    });
   }
 
   private updateRoleFromLocalStorage() {

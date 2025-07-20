@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../../services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChasseDetailsDialogComponent } from '../chasse-details/chasse-details-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -28,6 +29,7 @@ export class ChassesPubliquesPage implements OnInit {
   private participationService = inject(ParticipationService);
   private authService = inject(AuthService);
   private dialog = inject(MatDialog);
+  private router = inject(Router);
 
   currentUserPseudo: string | undefined;
   chasses: any[] = [];
@@ -100,6 +102,7 @@ export class ChassesPubliquesPage implements OnInit {
         alert('✅ Participation enregistrée !');
         this.participationChasseIds.add(chasse.id);
         this.mapChasses();
+        this.router.navigate(['/mes-participations']);
       },
       error: (err) => {
         console.error('Erreur de participation :', err);

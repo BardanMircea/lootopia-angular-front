@@ -54,7 +54,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem('jwt');
     localStorage.removeItem('userRole');
-    //localStorage.removeItem('failedCreusages');
+    localStorage.removeItem('failedCreusages');
   }
 
   getToken(): string | null {
