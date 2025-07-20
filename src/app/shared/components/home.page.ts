@@ -61,8 +61,10 @@ export class HomePage implements OnInit {
   isLoggedIn = () => this.auth.isLoggedIn();
 
   ngOnInit() {
-    if (this.auth.isLoggedIn()) {
+    if (this.auth.isLoggedIn() && this.auth.getUserRole() !== 'ADMIN') {
       this.router.navigate(['/chasses-publiques']);
+    } else if (this.auth.isLoggedIn() && this.auth.getUserRole() === 'ADMIN') {
+      this.router.navigate(['/admin/utilisateurs']);
     }
   }
 }

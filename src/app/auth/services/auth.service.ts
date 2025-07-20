@@ -9,12 +9,32 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  getUserRole(): string {
+    const role = localStorage.getItem('userRole');
+    return role ? JSON.parse(role) : '';
+  }
+
   login(
     data: Partial<{ email: string | null; motDePasse: string | null }>
   ): Observable<any> {
-    return this.http
-      .post(`${this.apiUrl}/login`, data)
-      .pipe(tap((res: any) => localStorage.setItem('jwt', res.token)));
+    return this.http.post(`${this.apiUrl}/login`, data).pipe(
+      tap((res: any) => {
+        localStorage.setItem('jwt', res.token);
+        const userInfo = this.getUserInfo();
+        if (userInfo && userInfo.roles) {
+          localStorage.setItem('userRole', JSON.stringify(userInfo.roles));
+        }
+        console.log(this.getUserInfo()?.roles);
+        console.log(
+          'User role set in localStorage:',
+          localStorage.getItem('userRole')
+        );
+        console.log(
+          'JWT token set in localStorage:',
+          localStorage.getItem('jwt')
+        );
+      })
+    );
   }
 
   register(
@@ -33,6 +53,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('jwt');
+    localStorage.removeItem('userRole');
     //localStorage.removeItem('failedCreusages');
   }
 

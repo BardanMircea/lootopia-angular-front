@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AppLayoutComponent } from './shared/components/app-layout.component';
 import { authGuard } from './auth/guards/auth.guard';
+import { adminGuard } from './shared/components/admin.guard';
 
 export const appRoutes: Routes = [
   {
@@ -68,6 +69,13 @@ export const appRoutes: Routes = [
           import('./shared/components/mon-compte.page').then(
             (m) => m.MonComptePage
           ),
+      },
+      {
+        path: 'admin/utilisateurs',
+        loadComponent: () =>
+          import(
+            '../app/shared/components/admin-gestion-utilisateurs.page'
+          ).then((m) => m.AdminGestionUtilisateursPage),
       },
       {
         path: 'login',

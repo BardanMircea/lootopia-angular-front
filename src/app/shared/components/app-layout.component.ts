@@ -26,17 +26,29 @@ import { UtilisateurService } from '../services/utilisateur.service';
     <mat-sidenav-container class="layout-container">
       <mat-sidenav mode="side" opened>
         <mat-nav-list>
-          <a mat-list-item routerLink="/">🏠 Accueil</a>
-
           <ng-container *ngIf="!isLoggedIn()">
             <a mat-list-item routerLink="/login">🔐 Se connecter</a>
             <a mat-list-item routerLink="/register">📝 Créer un compte</a>
           </ng-container>
 
-          <ng-container *ngIf="isLoggedIn()">
-            <a mat-list-item routerLink="/mon-compte">👤 Géstion de compte</a>
-            <!-- 🔓 DECONNEXION -->
-            <a mat-list-item (click)="logout()">🚪 Déconnexion</a>
+          <ng-container *ngIf="isLoggedIn() && role === 'ADMIN'">
+            <a mat-list-item routerLink="/admin/utilisateurs"
+              >🛡️ Gérer les utilisateurs</a
+            >
+          </ng-container>
+
+          <a
+            *ngIf="isLoggedIn() && role === 'USER'"
+            mat-list-item
+            routerLink="/mon-compte"
+            >👤 Géstion de compte</a
+          >
+          <!-- 🔓 DECONNEXION -->
+          <a *ngIf="isLoggedIn()" mat-list-item (click)="logout()"
+            >🚪 Déconnexion</a
+          >
+
+          <ng-container *ngIf="isLoggedIn() && role === 'USER'">
             <h4 style="margin-left: 8px; margin-top: 16px;">🎮 Joueur</h4>
             <a mat-list-item routerLink="/chasses-publiques"
               >🗺️ Chasses publiques</a
@@ -55,11 +67,13 @@ import { UtilisateurService } from '../services/utilisateur.service';
       </mat-sidenav>
 
       <mat-sidenav-content>
-        <mat-toolbar color="primary">
-          <span style="margin-left:auto;" *ngIf="isLoggedIn()">
+        <mat-toolbar *ngIf="isLoggedIn()" color="primary">
+          <span style="margin-left:auto;">
             Connecté en tant que <strong>{{ pseudo() }}</strong
             ><br />
-            Solde 💰: {{ this.soldeCouronnes() }} couronnes
+            <div *ngIf="role === 'USER'">
+              Solde 💰: {{ this.soldeCouronnes() }} couronnes
+            </div>
           </span>
         </mat-toolbar>
         <main style="padding: 1rem;">
@@ -92,12 +106,22 @@ export class AppLayoutComponent {
   private utilisateurService = inject(UtilisateurService);
   soldeCouronnes = computed(() => this.utilisateurService.soldeCouronnes());
   pseudo = () => this.auth.getUserInfo()?.pseudo;
+  role: string = '';
 
   ngOnInit() {
+    this.updateRoleFromLocalStorage();
+    this.router.events.subscribe(() => {
+      this.updateRoleFromLocalStorage();
+    });
+
     const email = this.auth.getUserInfo()?.email;
     if (email) {
       this.utilisateurService.mettreAJourSolde(email);
     }
+  }
+
+  private updateRoleFromLocalStorage() {
+    this.role = this.auth.getUserRole();
   }
 
   isLoggedIn() {

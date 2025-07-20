@@ -14,7 +14,7 @@
     "secure": false,
     "changeOrigin": true
   },
-  "/administration": {
+  "/admin": {
     "target": "https://localhost:8443",
     "secure": false,
     "changeOrigin": true
