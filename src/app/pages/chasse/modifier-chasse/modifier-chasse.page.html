@@ -1,0 +1,61 @@
+<h2>✏️ Modifier la chasse</h2>
+<mat-card *ngIf="chasse">
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Titre</mat-label>
+    <input matInput [(ngModel)]="chasse.titre" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Description</mat-label>
+    <input matInput [(ngModel)]="chasse.description" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Latitude</mat-label>
+    <input matInput type="number" [(ngModel)]="chasse.latitudeCache" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Longitude</mat-label>
+    <input matInput type="number" [(ngModel)]="chasse.longitudeCache" />
+  </mat-form-field>
+  <div id="map" style="height: 300px; margin-bottom: 16px"></div>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Type de monde</mat-label>
+    <mat-select [(ngModel)]="chasse.typeMonde">
+      <mat-option value="CARTOGRAPHIQUE">Cartographique</mat-option>
+      <mat-option value="REEL">Réel</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Message Cache Trouvée</mat-label>
+    <input matInput [(ngModel)]="chasse.messageCacheTrouve" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Frais de participation</mat-label>
+    <input matInput type="number" [(ngModel)]="chasse.fraisParticipation" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Montant de la récompense</mat-label>
+    <input matInput type="number" [(ngModel)]="chasse.montantRecompense" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Visibilité</mat-label>
+    <mat-select [(ngModel)]="chasse.visibilite">
+      <mat-option value="PUBLIC">Publique</mat-option>
+      <mat-option value="PRIVE">Privée</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="mettreAJourChasse()">
+    💾 Enregistrer les modifications
+  </button>
+  <button mat-stroked-button color="accent" (click)="ajouterEtape()">
+    ➕ Ajouter Étape
+  </button>
+</mat-card>

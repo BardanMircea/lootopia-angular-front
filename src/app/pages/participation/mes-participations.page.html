@@ -1,0 +1,91 @@
+<ng-container *ngIf="loading; else content">
+  <div class="center-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-container>
+
+<ng-template #content>
+  <h2>Mes participations</h2>
+  <div *ngIf="participations.length === 0">
+    Vous n'avez rejoint aucune chasse pour le moment.
+  </div>
+
+  <mat-card *ngFor="let p of participations" class="participation-card">
+    <mat-card-content>
+      <p>
+        <strong>Chasse :</strong>
+        {{ p.titreChasse }}
+      </p>
+      <p>
+        <strong>Participe depuis :</strong>
+        {{ p.inscritDepuis | date : 'mediumDate' }}
+      </p>
+      <p>
+        <strong>Étape actuelle :</strong>
+        {{ p.etapeCourante === -1 ? 'Sans étpe' : p.etapeCourante }}
+      </p>
+      <p><strong>Participants :</strong></p>
+      <mat-list>
+        <mat-list-item *ngFor="let pseudo of p.participants"
+          >{{ pseudo }}</mat-list-item
+        >
+      </mat-list>
+      <div *ngIf="successMessages[p.id]" style="margin-top: 10px">
+        🎉 {{ successMessages[p.id] }} Cache trouvé! Récompense ajoutée : {{
+        recompense }} 🪙
+      </div>
+      <div *ngIf="!p.cacheTrouvee">
+        <div *ngIf="failedCreusages[p.id] && !canRetry(p.id)">
+          ❌ Creusage raté. Réessayer dans {{ retryCountdowns[p.id] || '...' }}.
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions *ngIf="!successMessages[p.id] || failedCreusages[p.id]">
+      <ng-container *ngIf="p.cacheTrouvee; else creuserBtn">
+        <p class="success-text">✅ Cache déjà trouvée</p>
+      </ng-container>
+      <ng-template #creuserBtn>
+        <button
+          mat-stroked-button
+          color="warn"
+          (click)="annulerParticipation(p)"
+        >
+          Annuler la participation
+        </button>
+        <button
+          mat-raised-button
+          color="accent"
+          [disabled]="
+                !p.eligibleCreusage || failedCreusages[p.id] || p.cacheTrouvee
+              "
+          (click)="initierCreusage(p)"
+        >
+          {{ failedCreusages[p.id] ? 'Attendre (' + (retryCountdowns[p.id] ||
+          '...') + ')' : 'Creuser' }}
+        </button>
+        <button
+          *ngIf="failedCreusages[p.id] && !creusageDebloque[p.id]"
+          mat-stroked-button
+          color="primary"
+          (click)="debloquerCreusage(p)"
+          [disabled]="soldeUtilisateur < coutDeblocage"
+        >
+          🔓 Débloquer maintenant ({{ coutDeblocage }} 💰)
+        </button>
+      </ng-template>
+    </mat-card-actions>
+  </mat-card>
+
+  <div *ngIf="modeCreusage" class="creusage-zone">
+    <h3>🔍 Sélectionnez un point pour creuser</h3>
+    <div class="coords-inputs">
+      <label>Latitude : <input type="number" [(ngModel)]="lat" /></label>
+      <label>Longitude : <input type="number" [(ngModel)]="lng" /></label>
+    </div>
+    <div id="map" #mapRef style="height: 400px; margin-top: 8px"></div>
+    <button mat-raised-button color="primary" (click)="validerCreusage()">
+      Valider le creusage
+    </button>
+  </div>
+</ng-template>

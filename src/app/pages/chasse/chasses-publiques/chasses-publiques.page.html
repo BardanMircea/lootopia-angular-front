@@ -1,0 +1,41 @@
+<ng-container *ngIf="loading; else content">
+  <div class="center-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-container>
+
+<ng-template #content>
+  <h2>Chasses publiques disponibles</h2>
+  <div *ngIf="chasses.length === 0">Aucune chasse disponible.</div>
+
+  <mat-card *ngFor="let chasse of chasses" class="chasse-card">
+    <mat-card-content>
+      <p><strong>Titre :</strong> {{ chasse.titre }}</p>
+      <p><strong>Monde :</strong> {{ chasse.monde }}</p>
+      <p>
+        <strong>Durée :</strong> {{ chasse.dateDebut | date }} → {{
+        chasse.dateFin | date }}
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="participer(chasse)"
+        [disabled]="chasse.dejaInscrit"
+      >
+        {{ chasse.labelParticipation }}
+      </button>
+      <button mat-button color="accent" (click)="openDetails(chasse)">
+        Détails
+      </button>
+    </mat-card-actions>
+  </mat-card>
+  <mat-paginator
+    [length]="totalElements"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    [pageSizeOptions]="[5, 10, 20]"
+    (page)="loadPage($event)"
+  ></mat-paginator>
+</ng-template>

@@ -1,0 +1,13 @@
+.layout-container {
+  height: 100vh;
+}
+
+mat-sidenav {
+  width: 240px;
+}
+
+mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
