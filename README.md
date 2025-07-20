@@ -13,19 +13,26 @@ JWT Auth avec LocalStorage
 API RESTful (backend Spring Boot)
 
 📁 Structure principale du repo
-bash
-Copy
-Edit
 src/
+
 ├── app/
+
 │   ├── auth/                # Login, Register, Activation
+
 │   ├── pages/               # Toutes les pages du site
+
 │   │   ├── chasses/         # Pages liées aux chasses (création, liste, etc.)
+
 │   │   ├── participations/  # Pages de participation et creusage
+
 │   │   ├── admin/           # Page de gestion admin
+
 │   ├── services/            # Services Angular (API + stockage local)
+
 │   ├── layout/              # Barre latérale + layout principal
-├── assets/icons/           # Icônes (ex: treasureChest.jpg)
+
+├── assets/icons/           # Icônes (treasureChest.jpg)
+
 ✅ Fonctionnalités implémentées
 🔐 Authentification
 Création de compte (avec acceptation RGPD)
