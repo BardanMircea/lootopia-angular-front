@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from '../../services/auth.service';
 import { materialImports } from '../../material';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   standalone: true,
@@ -14,6 +15,7 @@ import { materialImports } from '../../material';
     CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
+    MatProgressSpinnerModule,
     ...materialImports,
   ],
 })
@@ -58,6 +60,8 @@ export class RegisterPage {
       },
       error: (err) => {
         this.error = err?.error?.message || 'Erreur lors de l’inscription';
+      },
+      complete: () => {
         this.loading = false;
       },
     });

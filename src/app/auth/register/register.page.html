@@ -64,6 +64,15 @@
     >
       Créer un compte
     </button>
+    <div
+      *ngIf="loading"
+      style="display: flex; justify-content: center; margin-top: 16px"
+    >
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="32"
+      ></mat-progress-spinner>
+    </div>
 
     <!-- Erreur globale -->
     <p *ngIf="error" style="color: red">{{ error }}</p>
